@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Geschlecht – Bio Lab E2</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green-deep:  #162e1f;
+      --green-dark:  #1f3d2b;
+      --green-mid:   #2b6040;
+      --green-light: #47956a;
+      --green-glow:  #79c498;
+      --green-pale:  #b0d8bc;
+      --accent:      #c8e35a;
+      --white:       #f4fdf7;
+      --muted:       #5a7a65;
+      --nav-h:       74px;
+    }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--green-deep);
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    body::before {
+      content:''; position:fixed; inset:0;
+      background:
+        radial-gradient(ellipse 70% 55% at 15% 25%, rgba(71,149,106,.2) 0%, transparent 60%),
+        radial-gradient(ellipse 55% 70% at 85% 75%, rgba(43,96,64,.25) 0%, transparent 60%),
+        radial-gradient(ellipse 45% 45% at 50% 50%, rgba(121,196,152,.06) 0%, transparent 70%);
+      pointer-events:none; z-index:0;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position:fixed; top:0; left:0; right:0; height:var(--nav-h);
+      display:flex; align-items:center; justify-content:space-between;
+      padding:0 2rem;
+      background:rgba(22,46,31,.88); backdrop-filter:blur(18px);
+      border-bottom:1px solid rgba(121,196,152,.18); z-index:100;
+    }
+    .logo { display:flex; align-items:center; gap:.7rem; text-decoration:none; }
+    .logo-icon {
+      width:44px; height:44px; background:rgba(43,96,64,.6);
+      border:1.5px solid rgba(121,196,152,.35); border-radius:10px;
+      display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    }
+    .logo-icon svg { width:28px; height:28px; }
+    .logo-text { display:flex; flex-direction:column; line-height:1; }
+    .logo-text .brand { font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:900; color:var(--white); letter-spacing:.02em; }
+    .logo-text .sub { font-size:.62rem; font-weight:500; color:var(--green-pale); letter-spacing:.14em; text-transform:uppercase; margin-top:3px; }
+    .nav-divider { width:1px; height:28px; background:rgba(121,196,152,.2); margin:0 1rem; flex-shrink:0; }
+    .nav-links { display:flex; align-items:center; gap:.1rem; list-style:none; }
+    .nav-links li { position:relative; }
+    .nav-links a {
+      display:flex; align-items:center; gap:.55rem; padding:.5rem 1rem;
+      font-size:.82rem; font-weight:500; color:var(--green-pale); text-decoration:none;
+      border-radius:8px; letter-spacing:.04em; text-transform:uppercase;
+      transition:all .22s ease; white-space:nowrap;
+    }
+    .nav-links a .nav-img { width:24px; height:24px; border-radius:5px; object-fit:cover; opacity:.75; flex-shrink:0; transition:opacity .2s,transform .2s; }
+    .nav-links a:hover .nav-img { opacity:1; transform:scale(1.08); }
+    .nav-links a::after {
+      content:''; position:absolute; bottom:4px; left:50%;
+      transform:translateX(-50%) scaleX(0); width:50%; height:2px;
+      background:var(--accent); border-radius:2px; transition:transform .25s ease;
+    }
+    .nav-links a:hover { color:var(--white); background:rgba(121,196,152,.1); }
+    .nav-links a:hover::after, .nav-links a.active::after { transform:translateX(-50%) scaleX(1); }
+    .nav-links a.active { color:var(--accent); background:rgba(200,227,90,.08); }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      position:relative; z-index:1;
+      padding:calc(var(--nav-h) + 3.5rem) 2rem 2rem;
+      text-align:center;
+    }
+    .page-header .eyebrow { font-size:.75rem; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:var(--green-glow); margin-bottom:.9rem; }
+    .page-header h1 { font-family:'Playfair Display',serif; font-size:clamp(2.2rem,6vw,4rem); font-weight:900; line-height:1.08; letter-spacing:-.02em; }
+    .page-header h1 em { font-style:italic; color:var(--green-glow); }
+    .page-header p { max-width:560px; margin:1.2rem auto 0; font-size:1rem; line-height:1.75; color:var(--green-pale); font-weight:300; }
+
+    /* ── TAB NAV ── */
+    .tab-bar {
+      position:relative; z-index:1;
+      max-width:860px; margin:2.5rem auto 0;
+      padding:0 2rem;
+      display:grid; grid-template-columns:repeat(3,1fr);
+      gap:1rem;
+    }
+    .tab-btn {
+      cursor:pointer;
+      padding:1.1rem 1rem;
+      background:rgba(255,255,255,.04);
+      border:1.5px solid rgba(121,196,152,.15);
+      border-radius:14px;
+      text-align:center;
+      transition:all .28s ease;
+      user-select:none;
+    }
+    .tab-btn:hover { background:rgba(255,255,255,.08); border-color:rgba(121,196,152,.35); }
+    .tab-btn.active {
+      background:rgba(200,227,90,.08);
+      border-color:var(--accent);
+      box-shadow:0 0 0 1px rgba(200,227,90,.2), 0 12px 30px rgba(0,0,0,.25);
+    }
+    .tab-num { font-size:.65rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-bottom:.35rem; }
+    .tab-btn.active .tab-num { color:var(--accent); }
+    .tab-label { font-family:'Playfair Display',serif; font-size:1rem; font-weight:700; }
+
+    /* ── CONTENT PANELS ── */
+    .panels { position:relative; z-index:1; max-width:1100px; margin:0 auto; padding:2.5rem 2rem 5rem; }
+    .panel { display:none; animation:fadeUp .45s ease both; }
+    .panel.active { display:block; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+
+    /* ── SHARED LAYOUT HELPERS ── */
+    .section-label { font-size:.72rem; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:var(--green-glow); margin-bottom:.7rem; }
+    .section-title { font-family:'Playfair Display',serif; font-size:clamp(1.6rem,3.5vw,2.4rem); font-weight:700; margin-bottom:1.6rem; }
+    .prose { font-size:.93rem; line-height:1.82; color:var(--green-pale); font-weight:300; max-width:720px; }
+    .prose strong { color:var(--white); font-weight:600; }
+    .prose p + p { margin-top:1rem; }
+
+    /* ── PANEL 1: CHROMOSOMALES GESCHLECHT ── */
+
+    /* Hero split */
+    .chrom-hero {
+      display:grid; grid-template-columns:1fr 1fr;
+      gap:2.5rem; align-items:start; margin-bottom:3rem;
+    }
+    .chrom-hero .prose { max-width:100%; }
+
+    /* Karyogram placeholder */
+    .karyo-box {
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(121,196,152,.18);
+      border-radius:16px; overflow:hidden;
+    }
+    .karyo-img-wrap { position:relative; height:340px; background:rgba(43,96,64,.3); overflow:hidden; }
+    .karyo-img-wrap img { width:100%; height:100%; object-fit:cover; object-position:center; display:block; }
+    .karyo-caption { padding:.9rem 1.2rem; font-size:.78rem; color:var(--muted); border-top:1px solid rgba(121,196,152,.1); }
+
+    /* XY cards */
+    .xy-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:2.5rem; }
+    .xy-card {
+      padding:1.5rem 1.6rem;
+      border-radius:14px; border:1px solid rgba(121,196,152,.18);
+      background:rgba(255,255,255,.04);
+    }
+    .xy-card.male { border-color:rgba(121,196,152,.3); }
+    .xy-card.female { border-color:rgba(200,227,90,.25); }
+    .xy-symbol { font-family:'Playfair Display',serif; font-size:2.8rem; font-weight:900; line-height:1; margin-bottom:.5rem; }
+    .xy-card.male .xy-symbol { color:var(--green-glow); }
+    .xy-card.female .xy-symbol { color:var(--accent); }
+    .xy-card h4 { font-size:.95rem; font-weight:600; margin-bottom:.5rem; }
+    .xy-card p { font-size:.85rem; line-height:1.65; color:var(--green-pale); font-weight:300; }
+
+    /* SRY info block */
+    .info-block {
+      background:rgba(200,227,90,.05);
+      border:1px solid rgba(200,227,90,.2);
+      border-radius:14px; padding:1.6rem 1.8rem; margin-bottom:2rem;
+    }
+    .info-block h4 { font-family:'Playfair Display',serif; font-size:1.15rem; font-weight:700; margin-bottom:.7rem; color:var(--accent); }
+    .info-block .prose { font-size:.88rem; }
+
+    /* Anomalien table-style */
+    .anomaly-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1rem; margin-top:1.4rem; }
+    .anomaly-card {
+      padding:1.3rem 1.5rem;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(121,196,152,.15);
+      border-radius:12px;
+      transition:all .25s;
+    }
+    .anomaly-card:hover { border-color:rgba(121,196,152,.35); transform:translateY(-3px); }
+    .anomaly-tag { font-size:.66rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--green-glow); margin-bottom:.5rem; }
+    .anomaly-card h5 { font-size:.95rem; font-weight:600; margin-bottom:.4rem; }
+    .anomaly-card p { font-size:.82rem; line-height:1.6; color:var(--green-pale); font-weight:300; }
+
+    /* ── PANEL 2: SOMATISCHES GESCHLECHT ── */
+
+    /* Timeline */
+    .timeline { position:relative; padding-left:2.2rem; margin-bottom:2.5rem; }
+    .timeline::before {
+      content:''; position:absolute; left:.4rem; top:.4rem; bottom:0;
+      width:1.5px; background:linear-gradient(to bottom, var(--green-glow), transparent);
+    }
+    .tl-item { position:relative; margin-bottom:2rem; }
+    .tl-dot {
+      position:absolute; left:-2.2rem; top:.25rem;
+      width:14px; height:14px; border-radius:50%;
+      background:var(--green-mid); border:2px solid var(--green-glow);
+      transition:background .2s;
+    }
+    .tl-item:hover .tl-dot { background:var(--accent); border-color:var(--accent); }
+    .tl-week { font-size:.7rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--green-glow); margin-bottom:.3rem; }
+    .tl-item h4 { font-size:1rem; font-weight:600; margin-bottom:.4rem; }
+    .tl-item p { font-size:.88rem; line-height:1.7; color:var(--green-pale); font-weight:300; }
+
+    /* Two column layout for somatic */
+    .two-col { display:grid; grid-template-columns:1fr 1fr; gap:2rem; margin-bottom:2.5rem; }
+    .col-card {
+      background:rgba(255,255,255,.04); border:1px solid rgba(121,196,152,.15);
+      border-radius:16px; padding:1.8rem;
+    }
+    .col-card h4 { font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; margin-bottom:1rem; }
+    .col-card ul { list-style:none; display:flex; flex-direction:column; gap:.6rem; }
+    .col-card ul li { font-size:.87rem; line-height:1.6; color:var(--green-pale); font-weight:300; padding-left:1.1rem; position:relative; }
+    .col-card ul li::before { content:'→'; position:absolute; left:0; color:var(--green-glow); font-size:.8rem; }
+
+    /* Hormone pill row */
+    .hormone-row { display:flex; flex-wrap:wrap; gap:.75rem; margin:1rem 0 2rem; }
+    .hormone-pill {
+      padding:.45rem 1.1rem;
+      border-radius:100px; font-size:.8rem; font-weight:500;
+      border:1px solid; letter-spacing:.04em;
+    }
+    .hormone-pill.t { background:rgba(121,196,152,.1); border-color:rgba(121,196,152,.3); color:var(--green-glow); }
+    .hormone-pill.e { background:rgba(200,227,90,.08); border-color:rgba(200,227,90,.25); color:var(--accent); }
+    .hormone-pill.amh { background:rgba(71,149,106,.12); border-color:rgba(71,149,106,.3); color:var(--green-pale); }
+
+    /* Intersexualität box */
+    .highlight-box {
+      background:rgba(121,196,152,.06); border:1px solid rgba(121,196,152,.25);
+      border-radius:14px; padding:1.6rem 1.8rem; margin-bottom:2rem;
+    }
+    .highlight-box h4 { font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; margin-bottom:.7rem; }
+    .highlight-box .prose { font-size:.88rem; }
+
+    /* ── PANEL 3: PSYCHISCHES GESCHLECHT ── */
+
+    /* Stages scroll */
+    .stages { display:flex; flex-direction:column; gap:1.2rem; margin-bottom:2.5rem; }
+    .stage-card {
+      display:grid; grid-template-columns:80px 1fr;
+      gap:1.5rem; align-items:start;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(121,196,152,.15);
+      border-radius:14px; padding:1.5rem 1.8rem;
+      transition:all .25s ease;
+    }
+    .stage-card:hover { border-color:rgba(121,196,152,.35); background:rgba(255,255,255,.07); }
+    .stage-age {
+      font-family:'Playfair Display',serif;
+      font-size:.95rem; font-weight:700;
+      color:var(--accent); line-height:1.3; text-align:center;
+      padding-top:.1rem;
+    }
+    .stage-card h4 { font-size:.97rem; font-weight:600; margin-bottom:.4rem; }
+    .stage-card p { font-size:.87rem; line-height:1.7; color:var(--green-pale); font-weight:300; }
+
+    /* Dysphoria & self-concept */
+    .two-info { display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; margin-bottom:2rem; }
+    .info-card {
+      background:rgba(255,255,255,.04); border:1px solid rgba(121,196,152,.15);
+      border-radius:14px; padding:1.6rem;
+    }
+    .info-card .ic-tag { font-size:.67rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--green-glow); margin-bottom:.6rem; }
+    .info-card h4 { font-family:'Playfair Display',serif; font-size:1.05rem; font-weight:700; margin-bottom:.7rem; }
+    .info-card p { font-size:.86rem; line-height:1.7; color:var(--green-pale); font-weight:300; }
+    .info-card p + p { margin-top:.7rem; }
+
+    /* Stat chips */
+    .stat-row { display:flex; gap:1rem; flex-wrap:wrap; margin:1rem 0 2rem; }
+    .stat-chip {
+      padding:.6rem 1.2rem;
+      background:rgba(255,255,255,.05); border:1px solid rgba(121,196,152,.2);
+      border-radius:10px; font-size:.82rem; color:var(--green-pale);
+    }
+    .stat-chip strong { color:var(--white); display:block; font-size:1.1rem; font-weight:700; margin-bottom:.15rem; }
+
+    /* ── FOOTER ── */
+    footer {
+      position:relative; z-index:1;
+      border-top:1px solid rgba(121,196,152,.12);
+      padding:1.6rem 2.5rem;
+      display:flex; align-items:center; justify-content:space-between;
+      flex-wrap:wrap; gap:1rem;
+    }
+    .footer-credit { font-size:.78rem; color:var(--muted); letter-spacing:.04em; }
+    .footer-team { font-size:.8rem; color:var(--green-pale); font-weight:500; letter-spacing:.04em; }
+    .footer-team strong { color:var(--accent); }
+
+    @media(max-width:720px){
+      nav { padding:0 1rem; }
+      .nav-links a { padding:.38rem .55rem; font-size:.76rem; }
+      .logo-text .sub { display:none; }
+      .tab-bar { grid-template-columns:1fr; padding:0 1rem; }
+      .chrom-hero, .two-col, .xy-row, .two-info { grid-template-columns:1fr; }
+      .stage-card { grid-template-columns:1fr; }
+      .panels { padding:2rem 1rem 4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav>
+  <a href="index.html" class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="14" cy="14" r="7" fill="#2b6040" stroke="#79c498" stroke-width="1.4"/>
+        <circle cx="14" cy="14" r="3.2" fill="#47956a"/>
+        <line x1="14" y1="2" x2="14" y2="7" stroke="#c8e35a" stroke-width="1.6" stroke-linecap="round"/>
+        <circle cx="14" cy="1.5" r="1.5" fill="#c8e35a"/>
+        <line x1="14" y1="21" x2="14" y2="26" stroke="#c8e35a" stroke-width="1.6" stroke-linecap="round"/>
+        <circle cx="14" cy="26.5" r="1.5" fill="#c8e35a"/>
+        <line x1="2" y1="14" x2="7" y2="14" stroke="#c8e35a" stroke-width="1.6" stroke-linecap="round"/>
+        <circle cx="1.5" cy="14" r="1.5" fill="#c8e35a"/>
+        <line x1="21" y1="14" x2="26" y2="14" stroke="#c8e35a" stroke-width="1.6" stroke-linecap="round"/>
+        <circle cx="26.5" cy="14" r="1.5" fill="#c8e35a"/>
+        <line x1="5.5" y1="5.5" x2="9" y2="9" stroke="#79c498" stroke-width="1.3" stroke-linecap="round"/>
+        <circle cx="4.8" cy="4.8" r="1.2" fill="#79c498"/>
+        <line x1="22.5" y1="5.5" x2="19" y2="9" stroke="#79c498" stroke-width="1.3" stroke-linecap="round"/>
+        <circle cx="23.2" cy="4.8" r="1.2" fill="#79c498"/>
+        <line x1="5.5" y1="22.5" x2="9" y2="19" stroke="#79c498" stroke-width="1.3" stroke-linecap="round"/>
+        <circle cx="4.8" cy="23.2" r="1.2" fill="#79c498"/>
+        <line x1="22.5" y1="22.5" x2="19" y2="19" stroke="#79c498" stroke-width="1.3" stroke-linecap="round"/>
+        <circle cx="23.2" cy="23.2" r="1.2" fill="#79c498"/>
+      </svg>
+    </div>
+    <div class="logo-text">
+      <span class="brand">Bio</span>
+      <span class="sub">Lab E2 &nbsp;·&nbsp; Lernportal</span>
+    </div>
+  </a>
+  <div class="nav-divider"></div>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="mitose-meiose.html"><img class="nav-img" src="nav-mitose.jpeg" alt="" onerror="this.style.display='none'">Mitose &amp; Meiose</a></li>
+    <li><a href="embryonale-entwicklung.html"><img class="nav-img" src="nav-embryo.jpeg" alt="" onerror="this.style.display='none'">Embryonale Entwicklung</a></li>
+    <li><a href="geschlecht.html" class="active"><img class="nav-img" src="nav-geschlecht.jpeg" alt="" onerror="this.style.display='none'">Geschlecht</a></li>
+    <li><a href="impressum.html">Impressum</a></li>
+  </ul>
+</nav>
+
+<!-- ── PAGE HEADER ── -->
+<div class="page-header">
+  <p class="eyebrow">Festlegung des Geschlechts</p>
+  <h1>Das menschliche <em>Geschlecht</em></h1>
+  <p>Biologisch, körperlich, psychisch – Geschlecht entsteht auf mehreren Ebenen und ist vielschichtiger, als es auf den ersten Blick scheint.</p>
+</div>
+
+<!-- ── TAB BAR ── -->
+<div class="tab-bar">
+  <div class="tab-btn active" onclick="showPanel(0)">
+    <div class="tab-num">01</div>
+    <div class="tab-label">Chromosomales Geschlecht</div>
+  </div>
+  <div class="tab-btn" onclick="showPanel(1)">
+    <div class="tab-num">02</div>
+    <div class="tab-label">Somatisches Geschlecht</div>
+  </div>
+  <div class="tab-btn" onclick="showPanel(2)">
+    <div class="tab-num">03</div>
+    <div class="tab-label">Psychisches Geschlecht</div>
+  </div>
+</div>
+
+<!-- ── PANELS ── -->
+<div class="panels">
+
+  <!-- ══ PANEL 1: CHROMOSOMALES GESCHLECHT ══ -->
+  <div class="panel active" id="panel-0">
+    <p class="section-label">Definition</p>
+    <h2 class="section-title">Das chromosomale Geschlecht</h2>
+
+    <div class="chrom-hero">
+      <div class="prose">
+        <p>Das chromosomale Geschlecht – auch genetisches Geschlecht genannt – wird im Moment der Befruchtung festgelegt. Es ergibt sich aus der Kombination der Gonosomen (Geschlechtschromosomen), die das 23. Chromosomenpaar des menschlichen Karyogramms bilden.</p>
+        <p>Es ist eines von drei Aspekten des biologischen Geschlechts, neben dem gonadalen und dem phänotypischen (genitalen) Geschlecht. Entscheidend ist dabei allein das Spermium: Die Eizelle trägt immer ein X-Chromosom, während das Spermium entweder ein X oder ein Y mitbringt.</p>
+        <p>Das X-Chromosom ist mit rund 2.000 Genen deutlich informationsreicher als das Y-Chromosom, das nur etwa 86 Gene trägt – darunter allerdings das entscheidende <strong>SRY-Gen</strong>.</p>
+      </div>
+      <div class="karyo-box">
+        <div class="karyo-img-wrap">
+          <img src="karyogramm.jpeg" alt="Karyogramm" onerror="this.style.display='none'">
+        </div>
+        <div class="karyo-caption">Abb.: Menschliches Karyogramm mit 23 Chromosomenpaaren – das 23. Paar zeigt die Gonosomen (X und Y).</div>
+      </div>
+    </div>
+
+    <!-- XY Cards -->
+    <div class="xy-row">
+      <div class="xy-card male">
+        <div class="xy-symbol">XY</div>
+        <h4>Männlich</h4>
+        <p>Ein X-Chromosom von der Mutter, ein Y-Chromosom vom Vater. Das Y-Chromosom trägt das SRY-Gen, das die Hodenentwicklung auslöst und damit die männliche Geschlechtsentwicklung in Gang setzt.</p>
+      </div>
+      <div class="xy-card female">
+        <div class="xy-symbol">XX</div>
+        <h4>Weiblich</h4>
+        <p>Zwei X-Chromosomen, je eines von Mutter und Vater. Ohne SRY-Gen entwickeln sich die Gonaden automatisch zu Eierstöcken – die weibliche Entwicklung gilt als biologischer „Grundzustand".</p>
+      </div>
+    </div>
+
+    <!-- SRY-Gen -->
+    <div class="info-block">
+      <h4>Das SRY-Gen</h4>
+      <div class="prose">
+        <p>Das <strong>SRY-Gen (Sex-determining Region of Y)</strong> liegt auf dem kurzen Arm des Y-Chromosoms, nahe der Spitze. Trotz seiner geringen Größe ist es das zentrale Gen für die männliche Geschlechtsentwicklung.</p>
+        <p>Ist das SRY-Gen aktiv, startet es eine genetische Signalkette, die die zunächst undifferenzierten Keimdrüsen des Embryos zu Hoden umwandelt. Ohne dieses Signal entwickeln sich die Keimdrüsen automatisch zu Eierstöcken. Das bedeutet: Nicht das Y-Chromosom als Ganzes, sondern vor allem das SRY-Gen steuert die männliche Entwicklung.</p>
+      </div>
+    </div>
+
+    <!-- Anomalien -->
+    <p class="section-label" style="margin-top:2.5rem">Chromosomenanomalien</p>
+    <h3 style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;margin-bottom:1.2rem;">Wenn die Chromosomenzahl abweicht</h3>
+    <div class="prose" style="margin-bottom:1.5rem;">
+      <p>Fehler bei der Meiose können dazu führen, dass ein Embryo eine abweichende Anzahl an Gonosomen erhält. Man unterscheidet <strong>Monosomie</strong> (ein Chromosom fehlt) und <strong>Trisomie</strong> (ein Chromosom mehr).</p>
+    </div>
+    <div class="anomaly-grid">
+      <div class="anomaly-card">
+        <div class="anomaly-tag">Monosomie · 45,X</div>
+        <h5>Turner-Syndrom</h5>
+        <p>Nur ein X-Chromosom, kein zweites Gonosom. Betroffene entwickeln sich äußerlich weiblich, haben aber oft Wachstumsstörungen, keine funktionierende Eierstöcke und sind in der Regel infertil.</p>
+      </div>
+      <div class="anomaly-card">
+        <div class="anomaly-tag">Trisomie · 47,XXY</div>
+        <h5>Klinefelter-Syndrom</h5>
+        <p>Ein zusätzliches X-Chromosom bei einem männlichen Individuum. Äußerlich meist männlich, aber häufig mit verminderter Testosteronproduktion, Infertilität und untypischen Körperproportionen.</p>
+      </div>
+      <div class="anomaly-card">
+        <div class="anomaly-tag">Trisomie · 47,XYY</div>
+        <h5>XYY-Syndrom</h5>
+        <p>Ein zusätzliches Y-Chromosom. Betroffene sind in der Regel männlich und oft symptomfrei. Manche zeigen leichte Entwicklungsverzögerungen oder überdurchschnittliche Körpergröße.</p>
+      </div>
+      <div class="anomaly-card">
+        <div class="anomaly-tag">Trisomie · 47,XXX</div>
+        <h5>Triple-X-Syndrom</h5>
+        <p>Drei X-Chromosomen bei einem weiblichen Individuum. Meist unauffällig, gelegentlich mit leichten Lernschwierigkeiten oder verzögerter Sprachentwicklung. Fertilität meist erhalten.</p>
+      </div>
+    </div>
+  </div><!-- /panel-0 -->
+
+
+  <!-- ══ PANEL 2: SOMATISCHES GESCHLECHT ══ -->
+  <div class="panel" id="panel-1">
+    <p class="section-label">Körperliche Entwicklung</p>
+    <h2 class="section-title">Das somatische Geschlecht</h2>
+    <div class="prose" style="margin-bottom:2.5rem;">
+      <p>Das somatische Geschlecht umfasst das <strong>gonadale Geschlecht</strong> (Art der Keimdrüsen: Hoden oder Eierstöcke) sowie das <strong>genitale Geschlecht</strong> (innere und äußere Geschlechtsorgane). Es entsteht aus dem chromosomalen Geschlecht, wird aber durch Hormone gesteuert – und ist damit beeinflussbar.</p>
+    </div>
+
+    <!-- Schlüsselhormone -->
+    <p class="section-label">Schlüsselhormone</p>
+    <div class="hormone-row">
+      <div class="hormone-pill t">Testosteron</div>
+      <div class="hormone-pill t">DHT (Dihydrotestosteron)</div>
+      <div class="hormone-pill amh">Anti-Müller-Hormon (AMH)</div>
+      <div class="hormone-pill e">Östrogen</div>
+      <div class="hormone-pill e">Progesteron</div>
+    </div>
+
+    <!-- Timeline -->
+    <p class="section-label">Entwicklung Woche für Woche</p>
+    <h3 style="font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;margin-bottom:1.5rem;">Von der Befruchtung zur Geburt</h3>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-week">Befruchtung · Woche 0</div>
+        <h4>Chromosomales Geschlecht wird festgelegt</h4>
+        <p>Mit der Verschmelzung von Ei- und Samenzelle wird das Gonosomenpaar bestimmt – XX oder XY. Das chromosomale Geschlecht ist damit fixiert, die körperliche Entwicklung beginnt aber noch nicht.</p>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-week">Woche 1–5 · Indifferente Phase</div>
+        <h4>Undifferenzierte Gonadenanlage</h4>
+        <p>Der Embryo besitzt zunächst sowohl Wolffsche Gänge (männliche Anlage) als auch Müller-Gänge (weibliche Anlage). Die Gonaden sind noch nicht differenziert – sie könnten sich in beide Richtungen entwickeln. Die äußeren Geschlechtsmerkmale sind bis zur 9. Woche ebenfalls nicht unterscheidbar.</p>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-week">Ab Woche 6–7 · Gonadale Differenzierung</div>
+        <h4>SRY-Gen entscheidet</h4>
+        <p>Ist das SRY-Gen aktiv, wandeln sich die Gonaden zu Hoden um. Ohne SRY-Signal werden sie zu Eierstöcken (Ovarien). Die weibliche Entwicklung gilt dabei als Grundzustand – sie benötigt keine aktive hormonelle Steuerung.</p>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-week">Ab Woche 7 · Männliche Differenzierung</div>
+        <h4>Testosteron &amp; AMH prägen die Entwicklung</h4>
+        <p>Die embryonalen Hoden beginnen, <strong>Testosteron</strong> zu produzieren. Das Enzym 5α-Reduktase wandelt es in das wirksamere <strong>DHT</strong> um, das den Genitalhöcker zum Penis verlängert und die Harnröhre schließt. Gleichzeitig produzieren die Sertolizellen das <strong>Anti-Müller-Hormon (AMH)</strong>, das die Müller-Gänge zurückbildet und so die weiblichen Geschlechtsanlagen verhindert.</p>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-week">Ab Woche 7 · Weibliche Differenzierung</div>
+        <h4>Ohne Testosteron – weibliche Organe entstehen</h4>
+        <p>Ohne Testosteron und AMH bleiben die Müller-Gänge erhalten und entwickeln sich zu Eileitern, Gebärmutter und dem oberen Teil der Vagina. Die Wolffsche Gänge bilden sich zurück. Der Genitalhöcker entwickelt sich zur Klitoris.</p>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-week">Woche 12 · Vollständige Funktion</div>
+        <h4>Hoden und Eierstöcke voll funktionsfähig</h4>
+        <p>Bei männlichen Embryonen funktionieren die Hoden vollständig und produzieren kontinuierlich Testosteron. Bei weiblichen Embryonen beginnen die Eierstöcke mit der Östrogenproduktion. Die grundlegende Geschlechtsdifferenzierung ist abgeschlossen.</p>
+      </div>
+    </div>
+
+    <!-- Männlich / Weiblich Organe -->
+    <div class="two-col">
+      <div class="col-card">
+        <h4>Männliche Entwicklung – Ergebnis</h4>
+        <ul>
+          <li>Hoden (aus Gonadenanlage, unter AMH-Einfluss)</li>
+          <li>Nebenhoden, Samenleiter, Samenblase (aus Wolffschen Gängen)</li>
+          <li>Penis und Hodensack (aus Genitalhöcker unter DHT)</li>
+          <li>Prostatа (aus Urogenitalsinus)</li>
+          <li>Rückbildung der Müller-Gänge durch AMH</li>
+        </ul>
+      </div>
+      <div class="col-card">
+        <h4>Weibliche Entwicklung – Ergebnis</h4>
+        <ul>
+          <li>Eierstöcke / Ovarien (aus Gonadenanlage, ohne SRY)</li>
+          <li>Eileiter, Gebärmutter, obere Vagina (aus Müller-Gängen)</li>
+          <li>Klitoris und Schamlippen (aus Genitalhöcker)</li>
+          <li>Rückbildung der Wolffschen Gänge</li>
+          <li>Östrogenproduktion ab Woche 12</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Intersexualität -->
+    <div class="highlight-box">
+      <h4>Intersexualität</h4>
+      <div class="prose">
+        <p>Von Intersexualität spricht man, wenn chromosomales, gonadales und phänotypisches Geschlecht nicht übereinstimmen. Dies kann durch verschiedene Ursachen entstehen – zum Beispiel durch <strong>Hormonrezeptor-Defekte</strong>.</p>
+        <p>Beim <strong>Androgeninsensitivitätssyndrom (AIS)</strong> reagieren die Körperzellen nicht auf Testosteron, obwohl ein XY-Chromosomensatz vorliegt. Der Körper entwickelt sich äußerlich weiblich. Solche Fälle zeigen, dass das chromosomale Geschlecht nicht allein bestimmend ist – die hormonelle Reaktion des Körpers spielt eine ebenso wichtige Rolle.</p>
+      </div>
+    </div>
+  </div><!-- /panel-1 -->
+
+
+  <!-- ══ PANEL 3: PSYCHISCHES GESCHLECHT ══ -->
+  <div class="panel" id="panel-2">
+    <p class="section-label">Identität &amp; Entwicklung</p>
+    <h2 class="section-title">Das psychische Geschlecht</h2>
+    <div class="prose" style="margin-bottom:2rem;">
+      <p>Das psychische Geschlecht beschreibt die individuelle, innere Wahrnehmung des eigenen Geschlechts – unabhängig vom biologischen. Es entfaltet sich über die gesamte Kindheit und Jugend und wird sowohl von biologischen als auch von sozialen und kognitiven Faktoren beeinflusst.</p>
+      <p>Die Entwicklung beginnt schon vor der Geburt und setzt sich bis in die Adoleszenz fort. Sie umfasst immer beides: <strong>biologische Reifung</strong> (z.B. Hormone) und <strong>kognitive, affektive und soziale Prozesse</strong>.</p>
+    </div>
+
+    <!-- Entwicklungsphasen -->
+    <p class="section-label">Entwicklungsphasen</p>
+    <h3 style="font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;margin-bottom:1.4rem;">Von der Geburt bis zur Adoleszenz</h3>
+    <div class="stages">
+      <div class="stage-card">
+        <div class="stage-age">Ab Woche 5</div>
+        <div>
+          <h4>Biologische Grundlegung</h4>
+          <p>Ab der 5. Schwangerschaftswoche ist das biologische Geschlecht erkennbar. Pränatale Hormone beeinflussen nicht nur die körperliche Entwicklung, sondern legen auch erste neurobiologische Grundlagen für die spätere Geschlechtsidentität.</p>
+        </div>
+      </div>
+      <div class="stage-card">
+        <div class="stage-age">Jahr 1–2</div>
+        <div>
+          <h4>Erste Wahrnehmung</h4>
+          <p>Bis Ende des zweiten Lebensjahres können Kinder bereits sicher zwischen männlichen und weiblichen Stimmen und Gesichtern unterscheiden. Rudimentäres Wissen über Geschlechtsstereotypen (z.B. typische Interessen) ist vorhanden, das Spielverhalten orientiert sich häufig schon am eigenen Geschlecht.</p>
+        </div>
+      </div>
+      <div class="stage-card">
+        <div class="stage-age">Kinder&shy;garten</div>
+        <div>
+          <h4>Ausprägung der Grundlagen</h4>
+          <p>Die im zweiten Lebensjahr angelegten Geschlechtskonzepte vertiefen sich. Kinder entwickeln ein stabiles Bewusstsein für ihre eigene Geschlechtszugehörigkeit. Geschlechtstypisches Verhalten und Präferenzen werden klarer, soziale Einflüsse (Familie, Peers) gewinnen an Bedeutung.</p>
+        </div>
+      </div>
+      <div class="stage-card">
+        <div class="stage-age">Schul&shy;begin</div>
+        <div>
+          <h4>Differenzierteres Verständnis</h4>
+          <p>Die genitale Grundlage der Geschlechter wird bewusster wahrgenommen. Kinder beginnen, Gemeinsamkeiten zwischen verschiedenen Geschlechtern und Unterschiede innerhalb eines Geschlechts zu erkennen. Die strikte Kategorisierung flexibilisiert sich etwas – in selbstbezogenen Kontexten bleibt die Geschlechtskategorie aber weiterhin zentral (<strong>Selbstkonzept</strong>).</p>
+        </div>
+      </div>
+      <div class="stage-card">
+        <div class="stage-age">Adoles&shy;zenz</div>
+        <div>
+          <h4>Identitätsfindung</h4>
+          <p>Die Adoleszenz stellt die intensivste Phase der Geschlechtsidentitätsentwicklung dar. Körperliche Veränderungen werden zu bedeutsamen Entwicklungsaufgaben: den eigenen Körper kennenlernen und akzeptieren, die sexuelle Orientierung entwickeln, erste romantische Beziehungen eingehen und sich mit gesellschaftlichen Geschlechterrollen auseinandersetzen. Fragen nach der eigenen Identität stehen im Mittelpunkt.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dysphorie & Selbstkonzept -->
+    <div class="two-info">
+      <div class="info-card">
+        <div class="ic-tag">Klinisch</div>
+        <h4>Geschlechtsdysphorie</h4>
+        <p>Eine ausgeprägte, anhaltende Diskrepanz zwischen dem zugewiesenen Geschlecht und dem innerlich erlebten Geschlecht. Bei Kindern muss sie mindestens <strong>3 Monate</strong> bestehen, bei Jugendlichen und Erwachsenen <strong>6 Monate</strong>.</p>
+        <p>Jugendliche und Erwachsene äußern oft den Wunsch, Geschlechtsmerkmale loswerden zu wollen oder ihre Entwicklung zu verhindern. Sie erleben häufig klinisch bedeutsames Leid durch die Diskrepanz zwischen erlebtem und zugewiesenem Geschlecht.</p>
+      </div>
+      <div class="info-card">
+        <div class="ic-tag">Psychologie</div>
+        <h4>Geschlechtsrollen-Selbstkonzept</h4>
+        <p>Bezeichnet die Selbstbeschreibung mit Eigenschaften, die als typisch maskulin oder feminin eingeordnet werden. Gängige Messinstrumente: <strong>Personal Attributes Questionnaire</strong> und <strong>Bem Sex Role Inventory</strong>.</p>
+        <p>Man unterscheidet vier Typen: <strong>feminin, maskulin, androgyn</strong> (sowohl instrumentell als auch expressiv) und <strong>undifferenziert</strong>. In vielen sozialen Kontexten ist das Selbstkonzept wichtiger als das biologische Geschlecht – und zeigt eine hohe Vorhersagekraft für psychische und physische Gesundheit.</p>
+      </div>
+    </div>
+
+    <!-- Statistik -->
+    <p class="section-label">Prävalenz Geschlechtsdysphorie</p>
+    <div class="stat-row">
+      <div class="stat-chip"><strong>0,005–0,014 %</strong>bei Männern (biologisch)</div>
+      <div class="stat-chip"><strong>0,002–0,003 %</strong>bei Frauen (biologisch)</div>
+      <div class="stat-chip"><strong>3 / 6 Monate</strong>Mindestdauer (Kinder / Jugendliche)</div>
+    </div>
+
+    <div class="info-block" style="margin-top:1.5rem;">
+      <h4>Biologisch oder sozial?</h4>
+      <div class="prose">
+        <p>Die Entstehung des psychischen Geschlechts ist nicht monokausal. Biologische Faktoren (Hormone, Genetik, pränatale Einflüsse) legen Grundlagen, die durch <strong>individuelle kognitive Entwicklung</strong>, familiäre Sozialisation und gesellschaftliche Normen überformt werden. Das Geschlechtsrollen-Selbstkonzept ist dabei kein starres Konstrukt, sondern entwickelt sich über das gesamte Leben weiter.</p>
+      </div>
+    </div>
+  </div><!-- /panel-2 -->
+
+</div><!-- /panels -->
+
+<!-- ── FOOTER ── -->
+<footer>
+  <span class="footer-credit">© 2025 Bio · Lernportal &nbsp;·&nbsp; Alle Inhalte dienen dem Bildungszweck</span>
+  <span class="footer-team">Bio Lab E2 &nbsp;·&nbsp; <strong>Max, Marlene &amp; Jan</strong></span>
+</footer>
+
+<script>
+  function showPanel(index) {
+    document.querySelectorAll('.panel').forEach((p, i) => p.classList.toggle('active', i === index));
+    document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === index));
+    document.querySelector('.panels').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+</script>
+
+</body>
+</html>

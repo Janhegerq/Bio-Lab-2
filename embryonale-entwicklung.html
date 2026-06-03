@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Embryonale Entwicklung – Bio Lab E2</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green-deep:  #162e1f;
+      --green-dark:  #1f3d2b;
+      --green-mid:   #2b6040;
+      --green-light: #47956a;
+      --green-glow:  #79c498;
+      --green-pale:  #b0d8bc;
+      --accent:      #c8e35a;
+      --white:       #f4fdf7;
+      --muted:       #5a7a65;
+      --danger:      #e57a5a;
+      --danger-pale: #f5c4b5;
+      --nav-h:       74px;
+    }
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--green-deep);color:var(--white);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;}
+    body::before{
+      content:'';position:fixed;inset:0;
+      background:
+        radial-gradient(ellipse 70% 55% at 15% 25%,rgba(71,149,106,.2) 0%,transparent 60%),
+        radial-gradient(ellipse 55% 70% at 85% 75%,rgba(43,96,64,.25) 0%,transparent 60%),
+        radial-gradient(ellipse 45% 45% at 50% 50%,rgba(121,196,152,.06) 0%,transparent 70%);
+      pointer-events:none;z-index:0;
+    }
+
+    /* ── NAV ── */
+    nav{position:fixed;top:0;left:0;right:0;height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;background:rgba(22,46,31,.88);backdrop-filter:blur(18px);border-bottom:1px solid rgba(121,196,152,.18);z-index:100;}
+    .logo{display:flex;align-items:center;gap:.7rem;text-decoration:none;}
+    .logo-icon{width:44px;height:44px;background:rgba(43,96,64,.6);border:1.5px solid rgba(121,196,152,.35);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .logo-icon svg{width:28px;height:28px;}
+    .logo-text{display:flex;flex-direction:column;line-height:1;}
+    .logo-text .brand{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:900;color:var(--white);letter-spacing:.02em;}
+    .logo-text .sub{font-size:.62rem;font-weight:500;color:var(--green-pale);letter-spacing:.14em;text-transform:uppercase;margin-top:3px;}
+    .nav-divider{width:1px;height:28px;background:rgba(121,196,152,.2);margin:0 1rem;flex-shrink:0;}
+    .nav-links{display:flex;align-items:center;gap:.1rem;list-style:none;}
+    .nav-links li{position:relative;}
+    .nav-links a{display:flex;align-items:center;gap:.55rem;padding:.5rem 1rem;font-size:.82rem;font-weight:500;color:var(--green-pale);text-decoration:none;border-radius:8px;letter-spacing:.04em;text-transform:uppercase;transition:all .22s ease;white-space:nowrap;}
+    .nav-links a .nav-img{width:24px;height:24px;border-radius:5px;object-fit:cover;opacity:.75;flex-shrink:0;transition:opacity .2s,transform .2s;}
+    .nav-links a:hover .nav-img{opacity:1;transform:scale(1.08);}
+    .nav-links a::after{content:'';position:absolute;bottom:4px;left:50%;transform:translateX(-50%) scaleX(0);width:50%;height:2px;background:var(--accent);border-radius:2px;transition:transform .25s ease;}
+    .nav-links a:hover{color:var(--white);background:rgba(121,196,152,.1);}
+    .nav-links a:hover::after,.nav-links a.active::after{transform:translateX(-50%) scaleX(1);}
+    .nav-links a.active{color:var(--accent);background:rgba(200,227,90,.08);}
+
+    /* ── PAGE HEADER ── */
+    .page-header{position:relative;z-index:1;padding:calc(var(--nav-h) + 3.5rem) 2rem 1rem;text-align:center;}
+    .eyebrow{font-size:.75rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--green-glow);margin-bottom:.9rem;}
+    .page-header h1{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,6vw,4rem);font-weight:900;line-height:1.08;letter-spacing:-.02em;}
+    .page-header h1 em{font-style:italic;color:var(--green-glow);}
+    .page-header p{max-width:580px;margin:1.2rem auto 0;font-size:1rem;line-height:1.75;color:var(--green-pale);font-weight:300;}
+
+    /* ── PHASE NAVIGATOR ── */
+    .phase-nav-bar{
+      position:relative;z-index:1;
+      max-width:1100px;margin:2.5rem auto 0;
+      padding:0 2rem;
+      display:flex;align-items:stretch;gap:.6rem;
+      overflow-x:auto;padding-bottom:.5rem;
+    }
+    .phase-nav-bar::-webkit-scrollbar{height:3px;}
+    .phase-nav-bar::-webkit-scrollbar-track{background:transparent;}
+    .phase-nav-bar::-webkit-scrollbar-thumb{background:rgba(121,196,152,.3);border-radius:2px;}
+
+    .pnav-btn{
+      flex-shrink:0;
+      cursor:pointer;
+      padding:.7rem 1.1rem;
+      background:rgba(255,255,255,.04);
+      border:1.5px solid rgba(121,196,152,.15);
+      border-radius:12px;
+      text-align:center;
+      transition:all .25s ease;
+      min-width:130px;
+    }
+    .pnav-btn:hover{background:rgba(255,255,255,.08);border-color:rgba(121,196,152,.35);}
+    .pnav-btn.active{background:rgba(200,227,90,.08);border-color:var(--accent);box-shadow:0 0 0 1px rgba(200,227,90,.2);}
+    .pnav-week{font-size:.62rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem;}
+    .pnav-btn.active .pnav-week{color:var(--accent);}
+    .pnav-name{font-size:.85rem;font-weight:600;color:var(--green-pale);}
+    .pnav-btn.active .pnav-name{color:var(--white);}
+
+    /* ── MAIN CONTENT ── */
+    .content{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:2rem 2rem 5rem;}
+
+    .phase-panel{display:none;animation:fadeUp .4s ease both;}
+    .phase-panel.active{display:block;}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+    /* Development card */
+    .dev-card{
+      display:grid;grid-template-columns:1fr 1fr;gap:0;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(121,196,152,.18);
+      border-radius:20px;overflow:hidden;
+      margin-bottom:2.5rem;
+    }
+    .dev-img-wrap{
+      position:relative;min-height:300px;
+      background:rgba(43,96,64,.35);overflow:hidden;
+    }
+    .dev-img-wrap img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.8) brightness(.8);}
+    .dev-img-wrap::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent 50%,rgba(22,46,31,.6));}
+    .img-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.5rem;color:var(--muted);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;}
+    .img-placeholder svg{opacity:.3;}
+    .dev-body{padding:2rem 2.2rem;display:flex;flex-direction:column;justify-content:center;}
+    .dev-phase-tag{display:inline-flex;align-items:center;gap:.5rem;margin-bottom:1rem;}
+    .dev-phase-tag .week-badge{padding:.25rem .8rem;background:rgba(200,227,90,.1);border:1px solid rgba(200,227,90,.3);border-radius:100px;font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);}
+    .dev-body h2{font-family:'Playfair Display',serif;font-size:clamp(1.4rem,3vw,2rem);font-weight:700;line-height:1.2;margin-bottom:1rem;}
+    .dev-body .prose{font-size:.9rem;line-height:1.78;color:var(--green-pale);font-weight:300;}
+    .dev-body .prose strong{color:var(--white);font-weight:600;}
+    .dev-body .prose p+p{margin-top:.85rem;}
+
+    /* Milestones */
+    .milestones{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.4rem;}
+    .milestone{padding:.3rem .85rem;background:rgba(121,196,152,.08);border:1px solid rgba(121,196,152,.2);border-radius:100px;font-size:.76rem;font-weight:500;color:var(--green-pale);}
+
+    /* Section divider */
+    .risk-header{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;}
+    .risk-header h3{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;}
+    .risk-badge{padding:.25rem .85rem;background:rgba(229,122,90,.1);border:1px solid rgba(229,122,90,.3);border-radius:100px;font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--danger);}
+    .risk-intro{font-size:.88rem;line-height:1.7;color:var(--green-pale);font-weight:300;margin-bottom:1.5rem;max-width:800px;}
+    .risk-intro strong{color:var(--white);}
+
+    /* Disease cards */
+    .disease-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;}
+    .disease-card{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(121,196,152,.14);
+      border-radius:14px;padding:1.4rem 1.5rem;
+      transition:all .25s ease;
+      cursor:default;
+    }
+    .disease-card:hover{border-color:rgba(229,122,90,.35);background:rgba(229,122,90,.04);transform:translateY(-3px);}
+    .disease-card .dc-header{display:flex;align-items:flex-start;justify-content:space-between;gap:.8rem;margin-bottom:.7rem;}
+    .disease-card h4{font-size:.97rem;font-weight:600;line-height:1.3;}
+    .dc-type{flex-shrink:0;padding:.2rem .6rem;border-radius:6px;font-size:.62rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;}
+    .dc-type.infektion{background:rgba(229,122,90,.12);color:var(--danger);}
+    .dc-type.suchtmittel{background:rgba(200,150,50,.12);color:#e5b55a;}
+    .dc-type.medikament{background:rgba(150,120,200,.12);color:#b59ae5;}
+    .dc-type.genetisch{background:rgba(121,196,152,.12);color:var(--green-glow);}
+    .dc-type.umwelt{background:rgba(100,180,200,.12);color:#79c4d4;}
+    .disease-card p{font-size:.84rem;line-height:1.68;color:var(--green-pale);font-weight:300;}
+    .disease-card .dc-detail{margin-top:.7rem;font-size:.8rem;line-height:1.6;color:var(--muted);}
+    .disease-card .dc-detail strong{color:var(--green-pale);}
+
+    /* Expand toggle */
+    .dc-toggle{
+      display:inline-flex;align-items:center;gap:.35rem;
+      margin-top:.8rem;font-size:.75rem;font-weight:600;
+      letter-spacing:.06em;text-transform:uppercase;
+      color:var(--green-glow);cursor:pointer;
+      background:none;border:none;padding:0;
+      transition:color .2s;
+    }
+    .dc-toggle:hover{color:var(--accent);}
+    .dc-extra{display:none;margin-top:.7rem;padding-top:.7rem;border-top:1px solid rgba(121,196,152,.1);font-size:.82rem;line-height:1.68;color:var(--green-pale);font-weight:300;}
+    .dc-extra.open{display:block;}
+
+    /* Nav arrows */
+    .phase-arrows{display:flex;align-items:center;justify-content:space-between;margin-top:3rem;padding-top:1.5rem;border-top:1px solid rgba(121,196,152,.12);}
+    .arrow-btn{display:flex;align-items:center;gap:.5rem;padding:.55rem 1.3rem;background:rgba(121,196,152,.1);border:1px solid rgba(121,196,152,.25);border-radius:8px;font-size:.8rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--green-pale);cursor:pointer;transition:all .2s;}
+    .arrow-btn:hover{background:rgba(121,196,152,.2);color:var(--white);border-color:rgba(121,196,152,.5);}
+    .arrow-btn:disabled{opacity:.25;cursor:not-allowed;pointer-events:none;}
+    .arrow-btn.next{background:rgba(200,227,90,.1);border-color:rgba(200,227,90,.3);color:var(--accent);}
+    .arrow-btn.next:hover{background:rgba(200,227,90,.2);border-color:var(--accent);color:var(--white);}
+    .phase-counter{font-size:.8rem;color:var(--muted);letter-spacing:.06em;}
+
+    /* ── FOOTER ── */
+    footer{position:relative;z-index:1;border-top:1px solid rgba(121,196,152,.12);padding:1.6rem 2.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+    .footer-credit{font-size:.78rem;color:var(--muted);letter-spacing:.04em;}
+    .footer-team{font-size:.8rem;color:var(--green-pale);font-weight:500;letter-spacing:.04em;}
+    .footer-team strong{color:var(--accent);}
+
+    @media(max-width:720px){
+      nav{padding:0 1rem;}
+      .nav-links a{padding:.38rem .55rem;font-size:.76rem;}
+      .logo-text .sub{display:none;}
+      .dev-card{grid-template-columns:1fr;}
+      .dev-img-wrap{min-height:200px;}
+      .content{padding:2rem 1rem 4rem;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav>
+  <a href="index.html" class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 28 28" fill="none">
+        <circle cx="14" cy="14" r="7" fill="#2b6040" stroke="#79c498" stroke-width="1.4"/>
+        <circle cx="14" cy="14" r="3.2" fill="#47956a"/>
+        <line x1="14" y1="2" x2="14" y2="7" stroke="#c8e35a" stroke-width="1.6" stroke-linecap="round"/>
+        <circle cx="14" cy="1.5" r="1.5" fill="#c8e35a"/>
+        <line x1="14" y1="21" x2="14" y2="26" stroke="#c8e35a" stroke-width="1.6" stroke-linecap="round"/>
+        <circle cx="14" cy="26.5" r="1.5" fill="#c8e35a"/>
+        <line x1="2" y1="14" x2="7" y2="14" stroke="#c8e35a" stroke-width="1.6" stroke-linecap="round"/>
+        <circle cx="1.5" cy="14" r="1.5" fill="#c8e35a"/>
+        <line x1="21" y1="14" x2="26" y2="14" stroke="#c8e35a" stroke-width="1.6" stroke-linecap="round"/>
+        <circle cx="26.5" cy="14" r="1.5" fill="#c8e35a"/>
+        <line x1="5.5" y1="5.5" x2="9" y2="9" stroke="#79c498" stroke-width="1.3" stroke-linecap="round"/>
+        <circle cx="4.8" cy="4.8" r="1.2" fill="#79c498"/>
+        <line x1="22.5" y1="5.5" x2="19" y2="9" stroke="#79c498" stroke-width="1.3" stroke-linecap="round"/>
+        <circle cx="23.2" cy="4.8" r="1.2" fill="#79c498"/>
+        <line x1="5.5" y1="22.5" x2="9" y2="19" stroke="#79c498" stroke-width="1.3" stroke-linecap="round"/>
+        <circle cx="4.8" cy="23.2" r="1.2" fill="#79c498"/>
+        <line x1="22.5" y1="22.5" x2="19" y2="19" stroke="#79c498" stroke-width="1.3" stroke-linecap="round"/>
+        <circle cx="23.2" cy="23.2" r="1.2" fill="#79c498"/>
+      </svg>
+    </div>
+    <div class="logo-text">
+      <span class="brand">Bio</span>
+      <span class="sub">Lab E2 &nbsp;·&nbsp; Lernportal</span>
+    </div>
+  </a>
+  <div class="nav-divider"></div>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="mitose-meiose.html"><img class="nav-img" src="nav-mitose.jpeg" alt="" onerror="this.style.display='none'">Mitose &amp; Meiose</a></li>
+    <li><a href="embryonale-entwicklung.html" class="active"><img class="nav-img" src="nav-embryo.jpeg" alt="" onerror="this.style.display='none'">Embryonale Entwicklung</a></li>
+    <li><a href="geschlecht.html"><img class="nav-img" src="nav-geschlecht.jpeg" alt="" onerror="this.style.display='none'">Geschlecht</a></li>
+    <li><a href="impressum.html">Impressum</a></li>
+  </ul>
+</nav>
+
+<!-- ── PAGE HEADER ── -->
+<div class="page-header">
+  <p class="eyebrow">Von der Zelle zum Mensch</p>
+  <h1>Embryonale <em>Entwicklung</em></h1>
+  <p>In nur 8 Wochen entsteht aus einer einzigen Zelle ein vollständig angelegter Mensch. Faszinierend – und erschreckend anfällig. Klicke dich durch die Phasen und erfahre, was passiert, wenn etwas schiefläuft.</p>
+</div>
+
+<!-- ── PHASE NAVIGATOR BAR ── -->
+<div class="phase-nav-bar">
+  <div class="pnav-btn active" onclick="showPhase(0)">
+    <div class="pnav-week">SSW 1–2</div>
+    <div class="pnav-name">Befruchtung &amp; Einnistung</div>
+  </div>
+  <div class="pnav-btn" onclick="showPhase(1)">
+    <div class="pnav-week">SSW 3</div>
+    <div class="pnav-name">Gastrulation</div>
+  </div>
+  <div class="pnav-btn" onclick="showPhase(2)">
+    <div class="pnav-week">SSW 3–4</div>
+    <div class="pnav-name">Neurulation</div>
+  </div>
+  <div class="pnav-btn" onclick="showPhase(3)">
+    <div class="pnav-week">SSW 4–6</div>
+    <div class="pnav-name">Organogenese I</div>
+  </div>
+  <div class="pnav-btn" onclick="showPhase(4)">
+    <div class="pnav-week">SSW 6–8</div>
+    <div class="pnav-name">Organogenese II</div>
+  </div>
+  <div class="pnav-btn" onclick="showPhase(5)">
+    <div class="pnav-week">SSW 9–12</div>
+    <div class="pnav-name">Fetalperiode I</div>
+  </div>
+  <div class="pnav-btn" onclick="showPhase(6)">
+    <div class="pnav-week">SSW 13–40</div>
+    <div class="pnav-name">Fetalperiode II</div>
+  </div>
+</div>
+
+<!-- ── PHASE PANELS ── -->
+<div class="content">
+
+  <!-- ══ PHASE 0: Befruchtung & Einnistung ══ -->
+  <div class="phase-panel active" id="panel-0">
+    <div class="dev-card">
+      <div class="dev-img-wrap">
+        <img src="embryo-befruchtung.jpeg" alt="Befruchtung" onerror="this.style.display='none'">
+      </div>
+      <div class="dev-body">
+        <div class="dev-phase-tag"><span class="week-badge">SSW 1–2</span></div>
+        <h2>Befruchtung &amp; Einnistung</h2>
+        <div class="prose">
+          <p>Alles beginnt mit einem einzigen Moment: Ein Spermium dringt in die Eizelle ein – die <strong>Zygote</strong> entsteht. In diesem Moment ist bereits festgelegt, welche Chromosomenkombination der neue Mensch trägt, und damit auch das chromosomale Geschlecht.</p>
+          <p>Die Zygote teilt sich auf dem Weg durch den Eileiter rasend schnell: Zunächst zur <strong>Morula</strong> (solider Zellhaufen), dann zur <strong>Blastula</strong> (hohle Kugel mit Flüssigkeit). Etwa am 6.–7. Tag nistet sich die Blastula in die Gebärmutterschleimhaut ein – die <strong>Implantation</strong>. Gelingt sie nicht, endet die Schwangerschaft unbemerkt.</p>
+          <p>In dieser frühen Phase gilt das <strong>„Alles-oder-Nichts-Prinzip"</strong>: Schädigungen führen entweder zum vollständigen Absterben oder werden vollständig repariert. Fehlbildungen entstehen hier noch nicht.</p>
+        </div>
+        <div class="milestones">
+          <span class="milestone">Zygote</span>
+          <span class="milestone">Morula (Tag 4)</span>
+          <span class="milestone">Blastula (Tag 5)</span>
+          <span class="milestone">Implantation (Tag 6–7)</span>
+          <span class="milestone">Trophoblast bildet sich</span>
+        </div>
+      </div>
+    </div>
+    <div class="risk-header">
+      <h3>Was kann schiefgehen?</h3>
+      <span class="risk-badge">Risiken dieser Phase</span>
+    </div>
+    <p class="risk-intro">In SSW 1–2 ist der Embryo noch sehr widerstandsfähig – <strong>Fehlbildungen entstehen hier nicht</strong>. Dafür ist das Risiko eines unerkannten Schwangerschaftsverlustes hoch, wenn die Einnistung scheitert.</p>
+    <div class="disease-grid">
+      <div class="disease-card">
+        <div class="dc-header"><h4>Implantationsversagen</h4><span class="dc-type genetisch">Entwicklung</span></div>
+        <p>Die Blastula nistet sich nicht oder nicht vollständig in die Gebärmutterschleimhaut ein. Die Schwangerschaft endet, oft ohne dass die Frau es bemerkt. Ursachen: Hormonmangel, schlechte Schleimhautqualität oder chromosomale Fehler im Embryo.</p>
+      </div>
+      <div class="disease-card">
+        <div class="dc-header"><h4>Extrauteringravidität</h4><span class="dc-type genetisch">Entwicklung</span></div>
+        <p>Die Eizelle nistet sich außerhalb der Gebärmutter ein – meist im Eileiter (<strong>Eileiterschwangerschaft</strong>). Medizinischer Notfall: Der Embryo kann dort nicht überleben, und der wachsende Trophoblast kann den Eileiter zum Platzen bringen.</p>
+        <button class="dc-toggle" onclick="toggleExtra(this)">Mehr erfahren ↓</button>
+        <div class="dc-extra">Symptome sind oft einseitige Schmerzen und Blutungen. Behandlung: medikamentös (Methotrexat) oder operativ. Tritt in etwa 1–2 % aller Schwangerschaften auf.</div>
+      </div>
+      <div class="disease-card">
+        <div class="dc-header"><h4>Frühe Chromosomenfehler</h4><span class="dc-type genetisch">Genetisch</span></div>
+        <p>Fehler bei der Meiose oder den ersten Zellteilungen führen zu Trisomien oder Monosomien. Viele dieser Embryonen werden spontan abgestoßen. Nur wenige, wie Trisomie 21, sind mit dem Leben vereinbar.</p>
+      </div>
+    </div>
+    <div class="phase-arrows">
+      <button class="arrow-btn" disabled>← Zurück</button>
+      <span class="phase-counter">1 / 7</span>
+      <button class="arrow-btn next" onclick="showPhase(1)">Weiter →</button>
+    </div>
+  </div>
+
+  <!-- ══ PHASE 1: Gastrulation ══ -->
+  <div class="phase-panel" id="panel-1">
+    <div class="dev-card">
+      <div class="dev-img-wrap">
+        <img src="embryo-gastrulation.jpeg" alt="Gastrulation" onerror="this.style.display='none'">
+      </div>
+      <div class="dev-body">
+        <div class="dev-phase-tag"><span class="week-badge">SSW 3</span></div>
+        <h2>Gastrulation – drei Keimblätter entstehen</h2>
+        <div class="prose">
+          <p>In der 3. Woche beginnt die eigentliche embryonale Entwicklung. Die Zellen des Embryos ordnen sich neu und bilden die drei <strong>Keimblätter</strong> – die Baupläne aller späteren Gewebe und Organe.</p>
+          <p><strong>Ektoderm</strong> (äußeres Blatt): Haut, Nervensystem, Sinnesorgane.<br>
+          <strong>Mesoderm</strong> (mittleres Blatt): Muskeln, Knochen, Herz-Kreislauf-System, Nieren.<br>
+          <strong>Endoderm</strong> (inneres Blatt): Verdauungstrakt, Lunge, Leber, Bauchspeicheldrüse.</p>
+          <p>Dieser Schritt ist <strong>irreversibel</strong>: Was als Ektoderm angelegt ist, wird niemals Darm. Die Differenzierung der Zellen beginnt – und damit auch die Verwundbarkeit des Embryos gegenüber äußeren Schädigungen.</p>
+        </div>
+        <div class="milestones">
+          <span class="milestone">Primitivstreifen bildet sich</span>
+          <span class="milestone">Ektoderm</span>
+          <span class="milestone">Mesoderm</span>
+          <span class="milestone">Endoderm</span>
+          <span class="milestone">Chorda dorsalis</span>
+        </div>
+      </div>
+    </div>
+    <div class="risk-header">
+      <h3>Was kann schiefgehen?</h3>
+      <span class="risk-badge">Kritische Phase beginnt</span>
+    </div>
+    <p class="risk-intro">Ab SSW 3 beginnt die <strong>kritische Periode</strong> der Embryonalentwicklung. Störungen können jetzt zu dauerhaften Fehlbildungen führen, weil die Grundstruktur des Körpers angelegt wird.</p>
+    <div class="disease-grid">
+      <div class="disease-card">
+        <div class="dc-header"><h4>Sirenomelie</h4><span class="dc-type genetisch">Entwicklung</span></div>
+        <p>Schwere Fehlbildung des Mesoderms: Die Beine des Embryos verwachsen zu einem einzigen Gliedmaß. Extrem selten (1 : 100.000), meist nicht mit dem Leben vereinbar. Ursache: Störung der Achsenentwicklung in der Gastrulation.</p>
+      </div>
+      <div class="disease-card">
+        <div class="dc-header"><h4>Toxoplasmose (frühe Infektion)</h4><span class="dc-type infektion">Infektion</span></div>
+        <p>Infektion der Mutter mit <em>Toxoplasma gondii</em> (Parasit, v.a. aus Katzenkot oder rohem Fleisch). Übertragung auf den Embryo in ca. 25 % der Fälle. Eine Infektion im 1. Trimester ist besonders schwerwiegend.</p>
+        <button class="dc-toggle" onclick="toggleExtra(this)">Mehr erfahren ↓</button>
+        <div class="dc-extra"><strong>Folgen:</strong> Totgeburt, Mikrozephalie (zu kleiner Kopf), intrakranielle Verkalkungen (Kalkablagerungen im Gehirn), Hydrozephalus (Wasserkopf), Augenschäden. <strong>Schutz:</strong> Kein roher Fleischverzehr, Handschuhe beim Katzenkontakt.</div>
+      </div>
+      <div class="disease-card">
+        <div class="dc-header"><h4>Alkohol (Teratogen)</h4><span class="dc-type suchtmittel">Suchtmittel</span></div>
+        <p>Alkohol ist im gesamten Verlauf der Schwangerschaft <strong>teratogen</strong> – also entwicklungsschädigend. Es gibt keine nachgewiesene sichere Menge. In SSW 3 kann er die Keimblätterbildung direkt stören.</p>
+        <button class="dc-toggle" onclick="toggleExtra(this)">Mehr erfahren ↓</button>
+        <div class="dc-extra"><strong>Fetales Alkoholsyndrom (FAS):</strong> Gesichtsdysmorphie, Wachstumsverzögerung, ZNS-Schäden, Verhaltensauffälligkeiten. FAS ist die häufigste vermeidbare geistige Behinderung weltweit.</div>
+      </div>
+    </div>
+    <div class="phase-arrows">
+      <button class="arrow-btn" onclick="showPhase(0)">← Zurück</button>
+      <span class="phase-counter">2 / 7</span>
+      <button class="arrow-btn next" onclick="showPhase(2)">Weiter →</button>
+    </div>
+  </div>
+
+  <!-- ══ PHASE 2: Neurulation ══ -->
+  <div class="phase-panel" id="panel-2">
+    <div class="dev-card">
+      <div class="dev-img-wrap">
+        <img src="embryo-neurulation.jpeg" alt="Neurulation" onerror="this.style.display='none'">
+      </div>
+      <div class="dev-body">
+        <div class="dev-phase-tag"><span class="week-badge">SSW 3–4</span></div>
+        <h2>Neurulation – das Nervensystem entsteht</h2>
+        <div class="prose">
+          <p>Das Ektoderm faltet sich an der Rückseite des Embryos zur <strong>Neuralplatte</strong>, die sich anschließend zum <strong>Neuralrohr</strong> schließt – dem Vorläufer von Gehirn und Rückenmark. Dieser Prozess muss bis zum <strong>28. Tag</strong> abgeschlossen sein.</p>
+          <p>Gleichzeitig beginnt das Herz zu schlagen: In SSW 4 entsteht das erste Herzflimmern – noch bevor der Embryo auch nur 5 mm groß ist. Der Körper faltet sich räumlich und gliedert sich in Kopf, Rumpf und die Anlagen der Gliedmaßen.</p>
+          <p>Diese Phase ist besonders kritisch, weil viele Frauen noch gar nicht wissen, dass sie schwanger sind – und dennoch schon teratogene Einflüsse wirken können.</p>
+        </div>
+        <div class="milestones">
+          <span class="milestone">Neuralplatte</span>
+          <span class="milestone">Neuralrohr schließt sich (Tag 28)</span>
+          <span class="milestone">Gehirn- und Rückenmarkanlage</span>
+          <span class="milestone">Herzschlag (SSW 4)</span>
+          <span class="milestone">Abfaltung des Embryos</span>
+        </div>
+      </div>
+    </div>
+    <div class="risk-header">
+      <h3>Was kann schiefgehen?</h3>
+      <span class="risk-badge">Neuralrohr-Defekte</span>
+    </div>
+    <p class="risk-intro">Schließt sich das Neuralrohr nicht vollständig, entstehen <strong>Neuralrohrdefekte</strong> – darunter einige der häufigsten schwerwiegenden Fehlbildungen. Folsäuremangel ist der wichtigste Risikofaktor.</p>
+    <div class="disease-grid">
+      <div class="disease-card">
+        <div class="dc-header"><h4>Spina bifida</h4><span class="dc-type genetisch">Entwicklung</span></div>
+        <p>Das Neuralrohr schließt sich im unteren Bereich nicht vollständig – Wirbelsäule und Rückenmark liegen teilweise offen. Häufigste Variante: <em>Meningomyelozele</em> (Rückenmark tritt aus). Folgen: Lähmungen, Blasen- und Darmfunktionsstörungen.</p>
+        <button class="dc-toggle" onclick="toggleExtra(this)">Mehr erfahren ↓</button>
+        <div class="dc-extra"><strong>Prävalenz:</strong> ca. 1–2 pro 1.000 Geburten. <strong>Prävention:</strong> Folsäure (400 µg/Tag) vor und in den ersten Wochen der Schwangerschaft reduziert das Risiko um bis zu 70 %. Operativer Verschluss ist möglich – auch schon vor der Geburt (fetale Chirurgie).</div>
+      </div>
+      <div class="disease-card">
+        <div class="dc-header"><h4>Anenzephalie</h4><span class="dc-type genetisch">Entwicklung</span></div>
+        <p>Das Neuralrohr schließt sich am oberen Ende nicht – Großhirn und Schädeldecke entwickeln sich nicht. Anenzephalie ist <strong>nicht mit dem Leben vereinbar</strong>. Betroffene Kinder werden tot geboren oder sterben kurz nach der Geburt.</p>
+      </div>
+      <div class="disease-card">
+        <div class="dc-header"><h4>Contergan / Thalidomid</h4><span class="dc-type medikament">Medikament</span></div>
+        <p>Das Schlafmittel Contergan (Thalidomid) wurde in den 1950er Jahren rezeptfrei verkauft. Eine Einnahme in SSW 3–6 führte zu schweren Extremitätenfehlbildungen (<strong>Thalidomid-Embryopathie</strong>): Robbengliedrigkeit (Phokomelie), fehlende Arme oder Beine.</p>
+        <button class="dc-toggle" onclick="toggleExtra(this)">Mehr erfahren ↓</button>
+        <div class="dc-extra">Über 10.000 Kinder weltweit waren betroffen, bevor das Medikament 1961 vom Markt genommen wurde. Der Fall führte zu einer Revolution der Arzneimittelzulassung. Thalidomid wird heute in streng kontrollierter Form gegen Lepra und bestimmte Krebsarten eingesetzt.</div>
+      </div>
+      <div class="disease-card">
+        <div class="dc-header"><h4>Varizella-Zoster (Windpocken)</h4><span class="dc-type infektion">Infektion</span></div>
+        <p>Eine Primärinfektion der Mutter mit dem Varizella-Zoster-Virus in der Frühschwangerschaft kann zu <strong>kongenitaler Varizella-Embryopathie</strong> führen. Nicht jede Infektion überträgt sich – etwa jede 8.–9. Infektion betrifft den Embryo.</p>
+        <button class="dc-toggle" onclick="toggleExtra(this)">Mehr erfahren ↓</button>
+        <div class="dc-extra"><strong>Folgen:</strong> Segmentale Hautnarben, neurologische Schäden, Augenschäden, Skelettanomalien. Eine Therapie der intrauterinen Infektion ist nicht möglich – <strong>Impfung vor der Schwangerschaft</strong> ist der einzige Schutz.</div>
+      </div>
+    </div>
+    <div class="phase-arrows">
+      <button class="arrow-btn" onclick="showPhase(1)">← Zurück</button>
+      <span class="phase-counter">3 / 7</span>
+      <button class="arrow-btn next" onclick="showPhase(3)">Weiter →</button>
+    </div>
+  </div>
+
+  <!-- ══ PHASE 3: Organogenese I ══ -->
+  <div class="phase-panel" id="panel-3">
+    <div class="dev-card">
+      <div class="dev-img-wrap">
+        <img src="embryo-organogenese1.jpeg" alt="Organogenese früh" onerror="this.style.display='none'">
+      </div>
+      <div class="dev-body">
+        <div class="dev-phase-tag"><span class="week-badge">SSW 4–6</span></div>
+        <h2>Organogenese I – die Organe nehmen Form an</h2>
+        <div class="prose">
+          <p>Dies ist die <strong>sensibelste Phase der gesamten Embryonalentwicklung</strong>. Alle lebenswichtigen Organe werden gleichzeitig angelegt. In SSW 4–6 entstehen in rasanter Geschwindigkeit: Herzanlage (und erste Kontraktionen), Anlage von Leber, Lunge und Bauchspeicheldrüse, erste Nierentubuli, Augen- und Ohrbläschen sowie die Extremitätenknospen – die späteren Arme und Beine.</p>
+          <p>Der Embryo ist in dieser Phase nur <strong>4–8 mm</strong> groß, gleicht aber bereits entfernt einem menschlichen Wesen. Das Gesicht formt sich: Nasen-, Mund- und Augenanlagen werden sichtbar.</p>
+          <p>Jedes Organ hat seine eigene <strong>sensible Phase</strong> – die Zeitspanne, in der es am anfälligsten für Schädigungen ist. Schäden in dieser Zeit sind kaum reparierbar.</p>
+        </div>
+        <div class="milestones">
+          <span class="milestone">Herzanlage + Schlagen</span>
+          <span class="milestone">Leberanlage</span>
+          <span class="milestone">Lungenanlage</span>
+          <span class="milestone">Augen- und Ohrbläschen</span>
+          <span class="milestone">Extremitätenknospen</span>
+          <span class="milestone">Gaumenanlage</span>
+        </div>
+      </div>
+    </div>
+    <div class="risk-header">
+      <h3>Was kann schiefgehen?</h3>
+      <span class="risk-badge">Höchstes Fehlbildungsrisiko</span>
+    </div>
+    <p class="risk-intro">SSW 4–6 ist die Phase mit dem <strong>höchsten Fehlbildungsrisiko</strong>. Nahezu jedes Organ, das jetzt angelegt wird, kann durch Infektionen, Medikamente oder andere Noxen fehlerhaft entstehen.</p>
+    <div class="disease-grid">
+      <div class="disease-card">
+        <div class="dc-header"><h4>Herzfehler (kongenital)</h4><span class="dc-type genetisch">Entwicklung</span></div>
+        <p>Angeborene Herzfehler sind die häufigsten schweren Fehlbildungen (ca. 1 % aller Geburten). Sie entstehen, wenn die Herzanlage in SSW 4–6 gestört wird. Formen: Ventrikelseptumdefekt (Loch in der Herzwand), Fallot-Tetralogie, Transposition der großen Gefäße.</p>
+      </div>
+      <div class="disease-card">
+        <div class="dc-header"><h4>Lippenspalte / Gaumenspalte</h4><span class="dc-type genetisch">Entwicklung</span></div>
+        <p>Häufige Fehlbildung (1 : 500–700 Geburten): Die Gesichtsfortsätze verwachsen nicht vollständig. Ursachen: genetisch + Umweltfaktoren (Folsäuremangel, Rauchen, Alkohol, bestimmte Medikamente wie Antiepileptika).</p>
+        <button class="dc-toggle" onclick="toggleExtra(this)">Mehr erfahren ↓</button>
+        <div class="dc-extra">Heute chirurgisch gut behandelbar. Dennoch können Sprech-, Hör- und Zahnprobleme dauerhaft auftreten. Pränatale Diagnose per Ultraschall oft ab SSW 18–20 möglich.</div>
+      </div>
+      <div class="disease-card">
+        <div class="dc-header"><h4>Röteln-Embryopathie</h4><span class="dc-type infektion">Infektion</span></div>
+        <p>Röteln-Infektion der Mutter vor SSW 12 → Gregg-Syndrom: Taubheit, Herzfehler, Katarakt (Linsentrübung), geistige Behinderung. Vor der Impfära war dies eine der häufigsten Ursachen schwerer Fehlbildungen. Heute in Deutschland durch Impfung selten.</p>
+        <button class="dc-toggle" onclick="toggleExtra(this)">Mehr erfahren ↓</button>
+        <div class="dc-extra">Entdeckt 1941 vom australischen Arzt Norman McAllister Gregg – ein Meilenstein der Embryologie. Eine Impfung vor der Schwangerschaft bietet nahezu vollständigen Schutz. Bei Infektion im 1. Trimenon liegt das Fehlbildungsrisiko bei über 80 %.</div>
+      </div>
+      <div class="disease-card">
+        <div class="dc-header"><h4>Kokain-Exposition</h4><span class="dc-type suchtmittel">Suchtmittel</span></div>
+        <p>Kokain verursacht <strong>Vasokonstriktion</strong> (Gefäßverengung) in der Plazenta → verminderter Blutfluss zum Embryo. Folgen: Herzfehler, Extremitätenfehlbildungen durch lokale Durchblutungsstörungen, Spontanaborte.</p>
+        <button class="dc-toggle" onclick="toggleExtra(this)">Mehr erfahren ↓</button>
+        <div class="dc-extra">Weitere Folgen: niedriges Geburtsgewicht, verringerter Kopfumfang, niedrigerer Apgar-Score (Gesundheitsscore nach der Geburt). Kinder können Entzugserscheinungen zeigen und haben erhöhtes Risiko für Entwicklungsverzögerungen.</div>
+      </div>
+    </div>
+    <div class="phase-arrows">
+      <button class="arrow-btn" onclick="showPhase(2)">← Zurück</button>
+      <span class="phase-counter">4 / 7</span>
+      <button class="arrow-btn next" onclick="showPhase(4)">Weiter →</button>
+    </div>
+  </div>
+
+  <!-- ══ PHASE 4: Organogenese II ══ -->
+  <div class="phase-panel" id="panel-4">
+    <div class="dev-card">
+      <div class="dev-img-wrap">
+        <img src="embryo-organogenese2.jpeg" alt="Organogenese spät" onerror="this.style.display='none'">
+      </div>
+      <div class="dev-body">
+        <div class="dev-phase-tag"><span class="week-badge">SSW 6–8</span></div>
+        <h2>Organogenese II – Feinarbeit &amp; Abschluss</h2>
+        <div class="prose">
+          <p>In SSW 6–8 werden die angelegten Organe weiter differenziert. Der Embryo wächst auf etwa <strong>2–3 cm</strong> – und sieht jetzt deutlich menschlicher aus. Finger und Zehen bilden sich durch programmierten Zelltod (Apoptose) heraus. Die Gesichtszüge werden klarer.</p>
+          <p>Das <strong>Geschlecht</strong> differenziert sich ab SSW 6 (gonadal) und bis SSW 9 (äußere Merkmale). Die Geschlechtsdifferenzierung hängt vom SRY-Gen und dem Hormonmilieu ab.</p>
+          <p>Am Ende von SSW 8 ist die <strong>Embryonalperiode abgeschlossen</strong>. Ab SSW 9 spricht man vom Fötus. Das Fehlbildungsrisiko sinkt, weil alle Organe grundsätzlich angelegt sind – es geht nun hauptsächlich um Wachstum und Reifung.</p>
+        </div>
+        <div class="milestones">
+          <span class="milestone">Finger &amp; Zehen durch Apoptose</span>
+          <span class="milestone">Gesicht erkennbar</span>
+          <span class="milestone">Geschlechtsdifferenzierung (gonadal)</span>
+          <span class="milestone">Nieren funktional</span>
+          <span class="milestone">Ende der Embryonalperiode</span>
+        </div>
+      </div>
+    </div>
+    <div class="risk-header">
+      <h3>Was kann schiefgehen?</h3>
+      <span class="risk-badge">Embryopathien bis SSW 10</span>
+    </div>
+    <p class="risk-intro">Embryopathien – Fehlbildungen durch externe Schädigungen – entstehen definitionsgemäß bis zur <strong>10. Schwangerschaftswoche</strong>. Sie führen nicht zur Fehlgeburt, sondern das Kind kommt mit Fehlbildungen zur Welt.</p>
+    <div class="disease-grid">
+      <div class="disease-card">
+        <div class="dc-header"><h4>Syndaktylie / Polydaktylie</h4><span class="dc-type genetisch">Entwicklung</span></div>
+        <p>Wenn die Apoptose zwischen den Fingern nicht vollständig abläuft, bleiben Finger verwachsen (<strong>Syndaktylie</strong>). Bei zu viel Apoptose an falscher Stelle oder zu wenig: überzählige Finger (<strong>Polydaktylie</strong>). Meist genetisch, teils durch Teratogene.</p>
+      </div>
+      <div class="disease-card">
+        <div class="dc-header"><h4>Lues / Syphilis</h4><span class="dc-type infektion">Infektion</span></div>
+        <p>Der Erreger <em>Treponema pallidum</em> kann den Fötus ab ca. SSW 20 infizieren – über die Plazenta oder während der Geburt. Unbehandelt: erhöhtes Risiko für Spontanaborte, Totgeburten, Frühgeburtlichkeit, <strong>Hydrops fetalis</strong>.</p>
+        <button class="dc-toggle" onclick="toggleExtra(this)">Mehr erfahren ↓</button>
+        <div class="dc-extra"><strong>Therapie:</strong> Benzathin-Benzylpenicillin – hemmt die Zellwandsynthese der Bakterien. Wirkung ist langfristig, da das Medikament nach intramuskulärer Injektion langsam zu Benzylpenicillin hydrolysiert und resorbiert wird. Frühzeitige Behandlung kann das Kind schützen.</div>
+      </div>
+      <div class="disease-card">
+        <div class="dc-header"><h4>Warfarin-Embryopathie</h4><span class="dc-type medikament">Medikament</span></div>
+        <p>Der Blutgerinnungshemmer Warfarin ist im 1. Trimenon teratogen. Folgen: Nasenhypoplasie (unterentwickelte Nase), Knochenpunktierung, Wachstumsverzögerung, in schweren Fällen ZNS-Schäden. In der Schwangerschaft wird stattdessen Heparin eingesetzt, da es nicht plazentagängig ist.</p>
+      </div>
+      <div class="disease-card">
+        <div class="dc-header"><h4>Parvovirus B19 (Ringelröteln)</h4><span class="dc-type infektion">Infektion</span></div>
+        <p>Ringelröteln bei der Mutter sind für sie selbst mild (Schmetterlings-Erythem im Gesicht, grippeähnliche Symptome). Beim Embryo/Fötus können sie jedoch zu <strong>Hydrops fetalis</strong> führen – einer lebensbedrohlichen Flüssigkeitsansammlung im Körper.</p>
+        <button class="dc-toggle" onclick="toggleExtra(this)">Mehr erfahren ↓</button>
+        <div class="dc-extra">In 10–20 % der Fälle kommt es zu intrauterinem Tod durch Herzversagen. Behandlung: intrauterine Bluttransfusion – Blut wird direkt in den Blutkreislauf des Kindes transfundiert. Kein Impfstoff verfügbar, daher ist Expositionsvermeidung wichtig.</div>
+      </div>
+    </div>
+    <div class="phase-arrows">
+      <button class="arrow-btn" onclick="showPhase(3)">← Zurück</button>
+      <span class="phase-counter">5 / 7</span>
+      <button class="arrow-btn next" onclick="showPhase(5)">Weiter →</button>
+    </div>
+  </div>
+
+  <!-- ══ PHASE 5: Fetalperiode I ══ -->
+  <div class="phase-panel" id="panel-5">
+    <div class="dev-card">
+      <div class="dev-img-wrap">
+        <img src="embryo-fetalperiode1.jpeg" alt="Fetalperiode früh" onerror="this.style.display='none'">
+      </div>
+      <div class="dev-body">
+        <div class="dev-phase-tag"><span class="week-badge">SSW 9–12</span></div>
+        <h2>Fetalperiode I – Wachstum &amp; erste Funktionen</h2>
+        <div class="prose">
+          <p>Mit SSW 9 ist der Embryo zum <strong>Fötus</strong> geworden. Die größten Gefahren für Fehlbildungen sind überstanden – jetzt stehen Wachstum und funktionale Reifung im Vordergrund. Der Fötus ist am Ende von SSW 12 etwa <strong>7–8 cm</strong> groß und wiegt ca. 20 g.</p>
+          <p>Wichtige Entwicklungen: Die Hoden sind bei männlichen Feten vollständig funktionsfähig und produzieren Testosteron. Eierstöcke beginnen mit der Östrogenproduktion. Äußere Geschlechtsmerkmale werden ab SSW 9 unterscheidbar, sind aber per Ultraschall meist erst ab SSW 12 erkennbar.</p>
+          <p>Der Fötus bewegt sich bereits aktiv – die Mutter spürt es aber noch nicht. Die Plazenta übernimmt nun vollständig die Versorgung. Das <strong>Risiko einer Fehlgeburt sinkt drastisch</strong> – deshalb geben die meisten Paare die Schwangerschaft erst jetzt bekannt.</p>
+        </div>
+        <div class="milestones">
+          <span class="milestone">Fötus ab SSW 9</span>
+          <span class="milestone">Ultraschall SSW 9–12</span>
+          <span class="milestone">Fingerabdrücke entstehen</span>
+          <span class="milestone">Plazenta vollständig</span>
+          <span class="milestone">Äußere Geschlechtsmerkmale sichtbar</span>
+          <span class="milestone">Erste Reflexe</span>
+        </div>
+      </div>
+    </div>
+    <div class="risk-header">
+      <h3>Was kann schiefgehen?</h3>
+      <span class="risk-badge">Fetopathien</span>
+    </div>
+    <p class="risk-intro">Ab SSW 9 spricht man von <strong>Fetopathien</strong> statt Embryopathien – die Organe sind angelegt, können aber in ihrer Funktion und ihrem Wachstum gestört werden. Manche Infektionserreger werden erst ab SSW 20 gefährlich.</p>
+    <div class="disease-grid">
+      <div class="disease-card">
+        <div class="dc-header"><h4>Trisomie 21 (Down-Syndrom)</h4><span class="dc-type genetisch">Genetisch</span></div>
+        <p>Ein drittes Chromosom 21 – entstanden durch Fehler in der Meiose. Häufigste lebensfähige Chromosomenstörung (1 : 700 Geburten). Ersttrimester-Screening (Nackenfaltenmessung + Bluttest) kann auf erhöhtes Risiko hinweisen.</p>
+        <button class="dc-toggle" onclick="toggleExtra(this)">Mehr erfahren ↓</button>
+        <div class="dc-extra">Folgen: charakteristische Gesichtszüge, Herzfehler (in 40–50 % der Fälle), geistige Behinderung, erhöhtes Risiko für Leukämie. Lebenserwartung heute durchschnittlich über 60 Jahre. Das Risiko steigt mit dem Alter der Mutter.</div>
+      </div>
+      <div class="disease-card">
+        <div class="dc-header"><h4>Amphetamin-Exposition</h4><span class="dc-type suchtmittel">Suchtmittel</span></div>
+        <p>Amphetamine (Speed, Crystal Meth) haben langfristige, subtile Auswirkungen auf Hirnstruktur und -funktion des Fötus. Studien zeigen Veränderungen in Aufmerksamkeit und Impulskontrolle. Genaue Langzeitfolgen sind noch nicht vollständig erforscht.</p>
+      </div>
+      <div class="disease-card">
+        <div class="dc-header"><h4>Intrauterine Wachstumsretardierung (IUGR)</h4><span class="dc-type umwelt">Wachstum</span></div>
+        <p>Das Kind wächst im Mutterleib langsamer als erwartet. Ursachen: Plazentainsuffizienz, Infektionen (z.B. Toxoplasmose), Rauchen, Unterernährung. Folgen: niedrigeres Geburtsgewicht, erhöhtes Risiko für spätere Herz-Kreislauf-Erkrankungen.</p>
+      </div>
+      <div class="disease-card">
+        <div class="dc-header"><h4>Opiat-Exposition</h4><span class="dc-type suchtmittel">Suchtmittel</span></div>
+        <p>Neugeborene opiatabhängiger Mütter zeigen nach der Geburt ein <strong>Neonatales Abstinenzsyndrom (NAS)</strong>: Zittern, Reizbarkeit, Trinkschwäche, Krampfanfälle. Behandlung: kontrollierte Dosierung von Morphin oder Methadon, langsam ausgeschlichen.</p>
+      </div>
+    </div>
+    <div class="phase-arrows">
+      <button class="arrow-btn" onclick="showPhase(4)">← Zurück</button>
+      <span class="phase-counter">6 / 7</span>
+      <button class="arrow-btn next" onclick="showPhase(6)">Weiter →</button>
+    </div>
+  </div>
+
+  <!-- ══ PHASE 6: Fetalperiode II ══ -->
+  <div class="phase-panel" id="panel-6">
+    <div class="dev-card">
+      <div class="dev-img-wrap">
+        <img src="embryo-fetalperiode2.jpeg" alt="Fetalperiode spät" onerror="this.style.display='none'">
+      </div>
+      <div class="dev-body">
+        <div class="dev-phase-tag"><span class="week-badge">SSW 13–40</span></div>
+        <h2>Fetalperiode II – Reifung bis zur Geburt</h2>
+        <div class="prose">
+          <p>Das zweite und dritte Trimenon stehen ganz im Zeichen des <strong>Wachstums und der funktionalen Reifung</strong>. Alle Organe sind angelegt – sie müssen jetzt wachsen, sich vernetzen und ihre Aufgaben übernehmen.</p>
+          <p>Ab SSW 20 beginnt die Mutter die <strong>Kindsbewegungen</strong> zu spüren. Das Gehirn wächst rasant: Die charakteristischen Hirnfurchen (Gyrifikation) entstehen zwischen SSW 24–34. Die Lunge – das letzte Organ, das ausgereift wird – produziert ab SSW 24 <strong>Surfactant</strong> (notwendig zum Atmen nach der Geburt).</p>
+          <p>Ab SSW 22–24 gilt der Fötus als <strong>bedingt lebensfähig</strong> – mit intensivmedizinischer Betreuung. Ab SSW 37 ist die Schwangerschaft termingerecht. In dieser langen Phase sind schwerwiegende Fehlbildungen seltener, aber andere Risiken wie Wachstumsstörungen und Frühgeburt treten in den Vordergrund.</p>
+        </div>
+        <div class="milestones">
+          <span class="milestone">Kindsbewegungen spürbar (SSW 20)</span>
+          <span class="milestone">Gyrifikation (SSW 24–34)</span>
+          <span class="milestone">Surfactant-Produktion (SSW 24)</span>
+          <span class="milestone">Bedingte Lebensfähigkeit (SSW 22–24)</span>
+          <span class="milestone">Lanugo-Haar</span>
+          <span class="milestone">Geburt (SSW 37–42)</span>
+        </div>
+      </div>
+    </div>
+    <div class="risk-header">
+      <h3>Was kann schiefgehen?</h3>
+      <span class="risk-badge">Spätrisiken</span>
+    </div>
+    <p class="risk-intro">Im 2. und 3. Trimenon sind klassische Fehlbildungen seltener, aber Infektionen, Suchtmittel und andere Noxen können weiterhin ernsthafte Folgen haben – besonders für Gehirn, Lunge und die allgemeine Reifung.</p>
+    <div class="disease-grid">
+      <div class="disease-card">
+        <div class="dc-header"><h4>Fetales Alkoholsyndrom (FAS)</h4><span class="dc-type suchtmittel">Suchtmittel</span></div>
+        <p>Alkohol schädigt das fetale Gehirn in <strong>jeder Schwangerschaftswoche</strong>. Im 2./3. Trimenon betrifft es vor allem die Gehirnreifung und die Vernetzung der Neuronen. FAS ist die häufigste vermeidbare Ursache für geistige Behinderung weltweit.</p>
+        <button class="dc-toggle" onclick="toggleExtra(this)">Mehr erfahren ↓</button>
+        <div class="dc-extra"><strong>Vollbild FAS:</strong> Gesichtsdysmorphie (schmale Oberlippe, flaches Philtrum, kleine Augenöffnungen), Wachstumsretardierung, ZNS-Auffälligkeiten. Geschätzte Prävalenz: 1–5 pro 1.000 Geburten. Es gibt keine sichere Alkoholmenge in der Schwangerschaft.</div>
+      </div>
+      <div class="disease-card">
+        <div class="dc-header"><h4>Kongenitale Toxoplasmose (spät)</h4><span class="dc-type infektion">Infektion</span></div>
+        <p>Eine Toxoplasma-Infektion im 2./3. Trimenon überträgt sich häufiger auf das Kind, ist aber oft weniger schwerwiegend als im 1. Trimenon. Typische Spätfolgen: okuläre Anomalien (Augenentzündungen, die erst im Jugend- oder Erwachsenenalter auftreten können).</p>
+      </div>
+      <div class="disease-card">
+        <div class="dc-header"><h4>Frühgeburt</h4><span class="dc-type umwelt">Wachstum</span></div>
+        <p>Geburt vor SSW 37. Risikofaktoren: Infektionen, Mehrlingsschwangerschaften, Stress, Rauchen, kurzer Gebärmutterhals. Frühgeborene vor SSW 28 haben erhöhtes Risiko für Atemnotsyndrom (fehlender Surfactant), Hirnblutungen und Langzeitbeeinträchtigungen.</p>
+        <button class="dc-toggle" onclick="toggleExtra(this)">Mehr erfahren ↓</button>
+        <div class="dc-extra">Ca. 8–10 % aller Geburten in Deutschland sind Frühgeburten. Fortschritte in der Neonatologie haben die Überlebensrate drastisch verbessert: Kinder ab SSW 24 überleben heute in spezialisierten Zentren in über 50 % der Fälle.</div>
+      </div>
+      <div class="disease-card">
+        <div class="dc-header"><h4>Barbiturate / Sedativa</h4><span class="dc-type medikament">Medikament</span></div>
+        <p>Barbiturate (Beruhigungs- und Schlafmittel) in der Spätschwangerschaft können zum <strong>neonatalen Drogenentzug</strong> führen: Zittern, Reizbarkeit, Unruhe beim Neugeborenen. Behandlung: kontrollierte Sedierung mit Phenobarbital, die langsam ausgeschlichen wird.</p>
+      </div>
+      <div class="disease-card">
+        <div class="dc-header"><h4>Hydrops fetalis</h4><span class="dc-type infektion">Komplikation</span></div>
+        <p>Lebensbedrohliche Flüssigkeitsansammlung in fetalen Kompartimenten (Bauchraum, Brustkorb, Haut). Ursachen: Parvovirus B19, Herzfehler, Rhesus-Inkompatibilität, Chromosomenstörungen. Behandlung: intrauterine Bluttransfusion oder frühzeitige Entbindung.</p>
+      </div>
+      <div class="disease-card">
+        <div class="dc-header"><h4>Rauchen in der Schwangerschaft</h4><span class="dc-type suchtmittel">Suchtmittel</span></div>
+        <p>Nikotin und Kohlenmonoxid verengen die Blutgefäße der Plazenta und reduzieren die Sauerstoffversorgung des Fötus. Folgen: IUGR, niedrigeres Geburtsgewicht, erhöhtes Risiko für plötzlichen Kindstod (SIDS) und spätere Atemwegserkrankungen.</p>
+      </div>
+    </div>
+    <div class="phase-arrows">
+      <button class="arrow-btn" onclick="showPhase(5)">← Zurück</button>
+      <span class="phase-counter">7 / 7</span>
+      <button class="arrow-btn next" disabled>Abgeschlossen ✓</button>
+    </div>
+  </div>
+
+</div><!-- /content -->
+
+<!-- ── FOOTER ── -->
+<footer>
+  <span class="footer-credit">© 2025 Bio · Lernportal &nbsp;·&nbsp; Alle Inhalte dienen dem Bildungszweck</span>
+  <span class="footer-team">Bio Lab E2 &nbsp;·&nbsp; <strong>Max, Marlene &amp; Jan</strong></span>
+</footer>
+
+<script>
+  const TOTAL = 7;
+  let current = 0;
+
+  function showPhase(index) {
+    document.querySelectorAll('.phase-panel').forEach((p,i) => p.classList.toggle('active', i === index));
+    document.querySelectorAll('.pnav-btn').forEach((b,i) => b.classList.toggle('active', i === index));
+    current = index;
+    window.scrollTo({ top: document.querySelector('.phase-nav-bar').offsetTop - 90, behavior: 'smooth' });
+  }
+
+  function toggleExtra(btn) {
+    const extra = btn.nextElementSibling;
+    const open = extra.classList.toggle('open');
+    btn.textContent = open ? 'Weniger ↑' : 'Mehr erfahren ↓';
+  }
+</script>
+
+</body>
+</html>

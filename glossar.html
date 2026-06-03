@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Impressum – Bio Lab E2</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green-deep:  #162e1f;
+      --green-dark:  #1f3d2b;
+      --green-mid:   #2b6040;
+      --green-light: #47956a;
+      --green-glow:  #79c498;
+      --green-pale:  #b0d8bc;
+      --accent:      #c8e35a;
+      --white:       #f4fdf7;
+      --muted:       #5a7a65;
+      --nav-h:       74px;
+    }
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--green-deep);color:var(--white);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;}
+    body::before{
+      content:'';position:fixed;inset:0;
+      background:
+        radial-gradient(ellipse 70% 55% at 15% 25%,rgba(71,149,106,.2) 0%,transparent 60%),
+        radial-gradient(ellipse 55% 70% at 85% 75%,rgba(43,96,64,.25) 0%,transparent 60%);
+      pointer-events:none;z-index:0;
+    }
+
+    /* ── NAV ── */
+    nav{position:fixed;top:0;left:0;right:0;height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;background:rgba(22,46,31,.88);backdrop-filter:blur(18px);border-bottom:1px solid rgba(121,196,152,.18);z-index:100;}
+    .logo{display:flex;align-items:center;gap:.7rem;text-decoration:none;}
+    .logo-icon{width:44px;height:44px;background:rgba(43,96,64,.6);border:1.5px solid rgba(121,196,152,.35);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .logo-icon svg{width:28px;height:28px;}
+    .logo-text{display:flex;flex-direction:column;line-height:1;}
+    .logo-text .brand{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:900;color:var(--white);letter-spacing:.02em;}
+    .logo-text .sub{font-size:.62rem;font-weight:500;color:var(--green-pale);letter-spacing:.14em;text-transform:uppercase;margin-top:3px;}
+    .nav-divider{width:1px;height:28px;background:rgba(121,196,152,.2);margin:0 1rem;flex-shrink:0;}
+    .nav-links{display:flex;align-items:center;gap:.1rem;list-style:none;}
+    .nav-links li{position:relative;}
+    .nav-links a{display:flex;align-items:center;gap:.55rem;padding:.5rem 1rem;font-size:.82rem;font-weight:500;color:var(--green-pale);text-decoration:none;border-radius:8px;letter-spacing:.04em;text-transform:uppercase;transition:all .22s ease;white-space:nowrap;}
+    .nav-links a .nav-img{width:24px;height:24px;border-radius:5px;object-fit:cover;opacity:.75;flex-shrink:0;}
+    .nav-links a::after{content:'';position:absolute;bottom:4px;left:50%;transform:translateX(-50%) scaleX(0);width:50%;height:2px;background:var(--accent);border-radius:2px;transition:transform .25s ease;}
+    .nav-links a:hover{color:var(--white);background:rgba(121,196,152,.1);}
+    .nav-links a:hover::after,.nav-links a.active::after{transform:translateX(-50%) scaleX(1);}
+    .nav-links a.active{color:var(--accent);background:rgba(200,227,90,.08);}
+
+    /* ── PAGE ── */
+    .page{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:calc(var(--nav-h) + 4rem) 2rem 6rem;}
+
+    .page-header{text-align:center;margin-bottom:3.5rem;}
+    .eyebrow{font-size:.75rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--green-glow);margin-bottom:.9rem;}
+    .page-header h1{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,6vw,3.8rem);font-weight:900;line-height:1.08;letter-spacing:-.02em;}
+    .page-header h1 em{font-style:italic;color:var(--green-glow);}
+    .page-header p{max-width:520px;margin:1.2rem auto 0;font-size:.95rem;line-height:1.75;color:var(--green-pale);font-weight:300;}
+
+    /* ── SECTIONS ── */
+    .imp-section{margin-bottom:2rem;background:rgba(255,255,255,.04);border:1px solid rgba(121,196,152,.14);border-radius:16px;padding:1.8rem 2rem;}
+    .imp-section h2{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin-bottom:1rem;color:var(--white);}
+    .imp-section p, .imp-section li{font-size:.88rem;line-height:1.75;color:var(--green-pale);font-weight:300;}
+    .imp-section p+p{margin-top:.6rem;}
+    .imp-section ul{list-style:none;display:flex;flex-direction:column;gap:.4rem;padding-left:.5rem;}
+    .imp-section ul li::before{content:'–';margin-right:.5rem;color:var(--green-glow);}
+    .imp-section strong{color:var(--white);font-weight:600;}
+
+    /* Fine print – tiny gray text */
+    .fine{font-size:.62rem !important;line-height:1.6 !important;color:var(--muted) !important;margin-top:.5rem !important;}
+
+    /* ── DATENSCHUTZ WALL ── */
+    .dsgvo-wall{
+      background:rgba(255,255,255,.04);border:1px solid rgba(121,196,152,.2);
+      border-radius:16px;padding:2rem;margin-bottom:2rem;
+    }
+    .dsgvo-wall h2{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin-bottom:.6rem;}
+    .dsgvo-scroll{
+      height:220px;overflow-y:scroll;padding:1rem;
+      background:rgba(0,0,0,.25);border-radius:10px;
+      border:1px solid rgba(121,196,152,.1);
+      font-size:.75rem;line-height:1.7;color:var(--muted);
+      margin-bottom:1.2rem;
+      scrollbar-width:thin;scrollbar-color:rgba(121,196,152,.3) transparent;
+    }
+    .dsgvo-scroll p+p{margin-top:.7rem;}
+    .dsgvo-scroll strong{color:var(--green-pale);}
+    .dsgvo-check-row{display:flex;align-items:flex-start;gap:.75rem;margin-bottom:.8rem;}
+    .dsgvo-check-row input[type=checkbox]{width:16px;height:16px;margin-top:3px;accent-color:var(--accent);flex-shrink:0;cursor:pointer;}
+    .dsgvo-check-row label{font-size:.78rem;line-height:1.6;color:var(--green-pale);cursor:pointer;}
+    .dsgvo-check-row label span{color:var(--muted);font-size:.7rem;}
+    .dsgvo-btn{
+      display:block;width:100%;padding:.75rem;
+      background:rgba(200,227,90,.1);border:1.5px solid rgba(200,227,90,.35);
+      border-radius:10px;font-size:.85rem;font-weight:600;
+      letter-spacing:.06em;text-transform:uppercase;
+      color:var(--accent);cursor:pointer;transition:all .2s;
+      margin-top:.4rem;
+    }
+    .dsgvo-btn:hover{background:rgba(200,227,90,.2);border-color:var(--accent);}
+
+    /* ── NEWSLETTER ── */
+    .newsletter{
+      background:rgba(255,255,255,.04);border:1px solid rgba(121,196,152,.18);
+      border-radius:16px;padding:2rem;margin-bottom:2rem;
+    }
+    .newsletter h2{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin-bottom:.4rem;}
+    .newsletter p{font-size:.88rem;line-height:1.7;color:var(--green-pale);font-weight:300;margin-bottom:1.2rem;}
+    .nl-row{display:flex;gap:.75rem;}
+    .nl-input{
+      flex:1;padding:.65rem 1rem;
+      background:rgba(0,0,0,.25);border:1px solid rgba(121,196,152,.25);
+      border-radius:8px;font-size:.88rem;color:var(--white);
+      font-family:'DM Sans',sans-serif;outline:none;
+      transition:border-color .2s;
+    }
+    .nl-input::placeholder{color:var(--muted);}
+    .nl-input:focus{border-color:var(--green-glow);}
+    .nl-btn{
+      padding:.65rem 1.4rem;
+      background:var(--green-mid);border:1px solid var(--green-light);
+      border-radius:8px;font-size:.83rem;font-weight:600;
+      letter-spacing:.05em;text-transform:uppercase;
+      color:var(--white);cursor:pointer;transition:all .2s;white-space:nowrap;
+    }
+    .nl-btn:hover{background:var(--green-light);}
+
+    /* ── MODAL ── */
+    .modal-overlay{
+      display:none;position:fixed;inset:0;
+      background:rgba(0,0,0,.75);backdrop-filter:blur(6px);
+      z-index:999;align-items:center;justify-content:center;
+      animation:fadeIn .2s ease;
+    }
+    .modal-overlay.show{display:flex;}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    .modal{
+      background:#1a3a2a;border:1px solid rgba(229,122,90,.4);
+      border-radius:20px;padding:2.5rem 2.2rem;
+      max-width:480px;width:90%;text-align:center;
+      animation:popIn .3s cubic-bezier(.34,1.56,.64,1) both;
+    }
+    @keyframes popIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+    .modal-icon{font-size:3rem;margin-bottom:1rem;display:block;}
+    .modal h3{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;margin-bottom:.8rem;color:#e57a5a;}
+    .modal p{font-size:.9rem;line-height:1.7;color:var(--green-pale);font-weight:300;margin-bottom:.6rem;}
+    .modal p strong{color:var(--white);}
+    .modal-list{text-align:left;margin:1rem 0 1.4rem;display:flex;flex-direction:column;gap:.5rem;}
+    .modal-list li{font-size:.83rem;color:var(--green-pale);list-style:none;padding-left:1.2rem;position:relative;line-height:1.5;}
+    .modal-list li::before{content:'✓';position:absolute;left:0;color:#e57a5a;font-size:.8rem;}
+    .modal-close{
+      display:inline-block;padding:.65rem 1.8rem;
+      background:rgba(229,122,90,.15);border:1.5px solid rgba(229,122,90,.4);
+      border-radius:8px;font-size:.82rem;font-weight:600;
+      letter-spacing:.08em;text-transform:uppercase;
+      color:#e57a5a;cursor:pointer;transition:all .2s;margin-top:.5rem;
+    }
+    .modal-close:hover{background:rgba(229,122,90,.28);}
+    .modal-fine{font-size:.65rem;color:var(--muted);margin-top:1rem;line-height:1.5;}
+
+    /* ── FOOTER ── */
+    footer{position:relative;z-index:1;border-top:1px solid rgba(121,196,152,.12);padding:1.6rem 2.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+    .footer-credit{font-size:.78rem;color:var(--muted);letter-spacing:.04em;}
+    .footer-team{font-size:.8rem;color:var(--green-pale);font-weight:500;letter-spacing:.04em;}
+    .footer-team strong{color:var(--accent);}
+
+    @media(max-width:720px){
+      nav{padding:0 1rem;}
+      .nav-links a{padding:.38rem .55rem;font-size:.76rem;}
+      .logo-text .sub{display:none;}
+      .nl-row{flex-direction:column;}
+      .page{padding-left:1rem;padding-right:1rem;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav>
+  <a href="index.html" class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 28 28" fill="none">
+        <circle cx="14" cy="14" r="7" fill="#2b6040" stroke="#79c498" stroke-width="1.4"/>
+        <circle cx="14" cy="14" r="3.2" fill="#47956a"/>
+        <line x1="14" y1="2" x2="14" y2="7" stroke="#c8e35a" stroke-width="1.6" stroke-linecap="round"/>
+        <circle cx="14" cy="1.5" r="1.5" fill="#c8e35a"/>
+        <line x1="14" y1="21" x2="14" y2="26" stroke="#c8e35a" stroke-width="1.6" stroke-linecap="round"/>
+        <circle cx="14" cy="26.5" r="1.5" fill="#c8e35a"/>
+        <line x1="2" y1="14" x2="7" y2="14" stroke="#c8e35a" stroke-width="1.6" stroke-linecap="round"/>
+        <circle cx="1.5" cy="14" r="1.5" fill="#c8e35a"/>
+        <line x1="21" y1="14" x2="26" y2="14" stroke="#c8e35a" stroke-width="1.6" stroke-linecap="round"/>
+        <circle cx="26.5" cy="14" r="1.5" fill="#c8e35a"/>
+        <line x1="5.5" y1="5.5" x2="9" y2="9" stroke="#79c498" stroke-width="1.3" stroke-linecap="round"/>
+        <circle cx="4.8" cy="4.8" r="1.2" fill="#79c498"/>
+        <line x1="22.5" y1="5.5" x2="19" y2="9" stroke="#79c498" stroke-width="1.3" stroke-linecap="round"/>
+        <circle cx="23.2" cy="4.8" r="1.2" fill="#79c498"/>
+        <line x1="5.5" y1="22.5" x2="9" y2="19" stroke="#79c498" stroke-width="1.3" stroke-linecap="round"/>
+        <circle cx="4.8" cy="23.2" r="1.2" fill="#79c498"/>
+        <line x1="22.5" y1="22.5" x2="19" y2="19" stroke="#79c498" stroke-width="1.3" stroke-linecap="round"/>
+        <circle cx="23.2" cy="23.2" r="1.2" fill="#79c498"/>
+      </svg>
+    </div>
+    <div class="logo-text">
+      <span class="brand">Bio</span>
+      <span class="sub">Lab E2 &nbsp;·&nbsp; Lernportal</span>
+    </div>
+  </a>
+  <div class="nav-divider"></div>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="mitose-meiose.html"><img class="nav-img" src="" alt="" onerror="this.style.display='none'">Mitose &amp; Meiose</a></li>
+    <li><a href="embryonale-entwicklung.html"><img class="nav-img" src="" alt="" onerror="this.style.display='none'">Embryonale Entwicklung</a></li>
+    <li><a href="geschlecht.html"><img class="nav-img" src="" alt="" onerror="this.style.display='none'">Geschlecht</a></li>
+    <li><a href="impressum.html" class="active">Impressum</a></li>
+  </ul>
+</nav>
+
+<!-- ── CONTENT ── -->
+<div class="page">
+
+  <div class="page-header">
+    <p class="eyebrow">Rechtliches &amp; so</p>
+    <h1>Impressum &amp; <em>Datenschutz</em></h1>
+    <p>Alles was du nicht lesen willst, aber angeblich lesen musst. Wir sind transparent. Wirklich.</p>
+  </div>
+
+  <!-- Impressum -->
+  <div class="imp-section">
+    <h2>Angaben gemäß § 5 TMG</h2>
+    <p><strong>Bio Lab E2 Lernportal</strong><br>
+    Irgendeine Schule, Zimmer 204<br>
+    12345 Musterstadt, Deutschland</p>
+    <p><strong>Verantwortlich für den Inhalt:</strong><br>
+    Max Mustermann, Marlene Musterfrau &amp; Jan Musterkind<br>
+    Klasse: irgendwas mit Bio</p>
+    <p><strong>Kontakt:</strong> bio-lab-e2@schule-die-niemand-kennt.de<br>
+    <strong>Telefon:</strong> Haben wir nicht. Das ist 2025.</p>
+    <p class="fine">Haftungshinweis: Trotz sorgfältiger inhaltlicher Kontrolle übernehmen wir keine Haftung für die Inhalte externer Links. Für den Inhalt der verlinkten Seiten sind ausschließlich deren Betreiber verantwortlich. Und für den Inhalt dieser Seite eigentlich auch nur halb, weil wir Biologie-Schüler und keine Ärzte sind. Bitte keine medizinischen Ratschläge von uns einholen.</p>
+  </div>
+
+  <!-- Datenschutz-Wand -->
+  <div class="dsgvo-wall">
+    <h2>Datenschutzerklärung</h2>
+    <p style="font-size:.85rem;color:var(--green-pale);font-weight:300;margin-bottom:1rem;">Bitte lies dir unsere Datenschutzerklärung vollständig durch und stimme zu. Du hast natürlich die freie Wahl. (Du hast keine freie Wahl.)</p>
+
+    <div class="dsgvo-scroll" id="dsgvo-text">
+      <p><strong>1. Allgemeines</strong><br>Wir nehmen den Schutz deiner persönlichen Daten sehr ernst. Wirklich. Pinky promise. Diese Datenschutzerklärung klärt auf, welche Daten wir erheben, wie wir sie verarbeiten und warum wir sie eigentlich gar nicht brauchen, aber trotzdem sammeln.</p>
+      <p><strong>2. Erhebung und Verarbeitung personenbezogener Daten</strong><br>Beim Besuch unserer Website werden automatisch folgende Daten erhoben: deine IP-Adresse, dein Browsertyp, dein Betriebssystem, die Uhrzeit deines Besuchs, wie lange du auf welcher Seite verweilst, ob du wirklich bis zum Ende der Mitose-Phasen geklickt hast, deine Lieblingspizzabelag-Präferenz (geschätzt, basierend auf Scrollverhalten), sowie die Farbe deines Lieblings-Hoodies (Algorithmus, Patent ausstehend).</p>
+      <p><strong>3. Weitergabe an Dritte</strong><br>Deine Daten werden grundsätzlich nicht an Dritte weitergegeben, es sei denn, es handelt sich um unsere Partnerunternehmen, Kooperationspartner, Dienstleister, Auftragsverarbeiter, Unterauftragsverarbeiter, Sub-Unterauftragsverarbeiter, deren Muttergesellschaften, Tochtergesellschaften, Schwesterunternehmen und gelegentlich auch an den Onkel von jemandem, der irgendwie im Marketing arbeitet.</p>
+      <p><strong>4. Cookies</strong><br>Diese Website verwendet Cookies. Und zwar viele. Technisch notwendige Cookies, Analyse-Cookies, Marketing-Cookies, Personalisierungs-Cookies, Drittanbieter-Cookies, Tracking-Cookies, Session-Cookies, Persistent-Cookies und den Cookie, den jemand aus dem Biologiepraktikum übrig gelassen hat. Durch die weitere Nutzung stimmst du dem zu. Natürlich kannst du Cookies ablehnen, dann funktioniert aber auch gar nichts mehr und wir schauen dich enttäuscht an.</p>
+      <p><strong>5. Deine Rechte</strong><br>Du hast das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch. Diese Rechte kannst du jederzeit geltend machen, indem du uns ein Fax schickst (Faxnummer: 0190-DATENSCHUTZ). Bitte ausreichend frankieren.</p>
+      <p><strong>6. Speicherdauer</strong><br>Deine Daten werden so lange gespeichert, wie es gesetzlich vorgeschrieben ist, oder bis jemand aus unserem Team aufräumt, oder bis der Wärmetod des Universums eintritt – je nachdem, was zuerst kommt.</p>
+      <p><strong>7. Schlussbestimmungen</strong><br>Solltest du bis hierhin gelesen haben: Herzlichen Glückwunsch. Du bist statistisch gesehen eine von 0,3 Personen, die das je getan haben. Wir schätzen das sehr. Als Dankeschön erhältst du... nichts. Aber danke trotzdem.</p>
+    </div>
+
+    <div class="dsgvo-check-row">
+      <input type="checkbox" id="check1">
+      <label for="check1">Ich habe die Datenschutzerklärung gelesen und verstanden. <span>(Lüge, aber okay)</span></label>
+    </div>
+    <div class="dsgvo-check-row">
+      <input type="checkbox" id="check2">
+      <label for="check2">Ich stimme der Verarbeitung meiner Daten zu allen oben genannten und einigen noch nicht genannten Zwecken zu. <span>(Das Kleingedruckte gilt doppelt.)</span></label>
+    </div>
+    <div class="dsgvo-check-row">
+      <input type="checkbox" id="check3">
+      <label for="check3">Ich akzeptiere alle Cookies, auch die, die ich nicht kenne. <span>(Besonders die.)</span></label>
+    </div>
+    <div class="dsgvo-check-row">
+      <input type="checkbox" id="check4">
+      <label for="check4">Ich bestätige, dass ich mindestens 16 Jahre alt bin oder die Zustimmung meiner Eltern habe. Die Eltern wurden nicht gefragt, aber das ist ein Detail. <span></span></label>
+    </div>
+    <button class="dsgvo-btn" onclick="acceptDsgvo()">Ich akzeptiere alles, uneingeschränkt und für immer →</button>
+  </div>
+
+  <!-- Newsletter -->
+  <div class="newsletter" id="newsletter-section">
+    <h2>Newsletter abonnieren</h2>
+    <p>Bleib auf dem Laufenden über neue Bio-Inhalte, Lernmaterial und gelegentliche existenzielle Krisen rund um die Zellteilung. Kein Spam. Na ja, wenig Spam.</p>
+    <div class="nl-row">
+      <input class="nl-input" id="nl-email" type="email" placeholder="deine@email.de">
+      <button class="nl-btn" onclick="subscribeNewsletter()">Anmelden</button>
+    </div>
+    <p class="fine" style="margin-top:.8rem;">Mit der Anmeldung stimmst du zu, dass deine E-Mail-Adresse für den Versand des Newsletters sowie für andere Zwecke, die wir uns noch überlegen, verwendet werden darf. Abmeldung jederzeit möglich, sofern du die Abmelde-Schaltfläche findest. Wir wünschen dir viel Erfolg dabei.</p>
+  </div>
+
+  <!-- Credits -->
+  <div class="imp-section">
+    <h2>Credits &amp; Danksagungen</h2>
+    <ul>
+      <li>Unserer Biologielehrerin – für die Aufgabe, die zu dieser Website geführt hat</li>
+      <li>Dem Erfinder des Internets – allgemein</li>
+      <li>Dem Entdecker der Mitose – Walther Flemming, 1882. Chapeau.</li>
+      <li>Kaffee – ohne den wäre diese Website in SSW 1 steckengeblieben</li>
+      <li>Dem W-LAN der Schule – für seine sporadische Verfügbarkeit, die uns gelehrt hat, offline zu arbeiten</li>
+    </ul>
+  </div>
+
+</div><!-- /page -->
+
+<!-- ── MODAL ── -->
+<div class="modal-overlay" id="scam-modal">
+  <div class="modal">
+    <span class="modal-icon">🎉</span>
+    <h3>Vielen Dank!</h3>
+    <p>Deine Anmeldung war erfolgreich. Wir haben sofort gehandelt.</p>
+    <p><strong>Folgendes ist bereits passiert:</strong></p>
+    <ul class="modal-list">
+      <li>Deine E-Mail-Adresse wurde an 47 Werbepartner weitergeleitet</li>
+      <li>Dein vollständiges Browserprofil wurde exportiert und archiviert</li>
+      <li>Du wirst ab sofort täglich 3–12 Newsletter erhalten (auch von Firmen, die du nicht kennst)</li>
+      <li>Deine Daten wurden an einen Datenhändler in einem Land verkauft, das du auf einer Karte vermutlich nicht findest</li>
+      <li>Dein Kühlschrank wurde informiert</li>
+    </ul>
+    <p style="font-size:.82rem;color:var(--muted);">Das ist natürlich alles ein Witz. Diese Website ist ein Schulprojekt und speichert rein gar nichts. Entspann dich. 🌿</p>
+    <button class="modal-close" onclick="closeModal()">Okay, wurde verstanden</button>
+    <p class="modal-fine">Durch das Schließen dieses Dialogs stimmst du zu, dass du weißt, dass das ein Witz ist. Diese Zustimmung ist unwiderruflich und gilt für alle Paralleluniversen.</p>
+  </div>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <span class="footer-credit">© 2025 Bio · Lernportal &nbsp;·&nbsp; Alle Inhalte dienen dem Bildungszweck</span>
+  <span class="footer-team">Bio Lab E2 &nbsp;·&nbsp; <strong>Max, Marlene &amp; Jan</strong></span>
+</footer>
+
+<script>
+  function acceptDsgvo() {
+    document.getElementById('check1').checked = true;
+    document.getElementById('check2').checked = true;
+    document.getElementById('check3').checked = true;
+    document.getElementById('check4').checked = true;
+    document.querySelector('.dsgvo-btn').textContent = '✓ Akzeptiert. Keine Wahl hattest du sowieso.';
+    document.querySelector('.dsgvo-btn').style.color = 'var(--green-glow)';
+    document.querySelector('.dsgvo-btn').style.borderColor = 'rgba(121,196,152,.4)';
+    document.querySelector('.dsgvo-btn').style.cursor = 'default';
+    document.querySelector('.dsgvo-btn').onclick = null;
+  }
+
+  function subscribeNewsletter() {
+    const email = document.getElementById('nl-email').value.trim();
+    if (!email || !email.includes('@')) {
+      document.getElementById('nl-email').style.borderColor = 'rgba(229,122,90,.6)';
+      document.getElementById('nl-email').placeholder = 'Bitte eine echte E-Mail eingeben...';
+      return;
+    }
+    document.getElementById('scam-modal').classList.add('show');
+  }
+
+  function closeModal() {
+    document.getElementById('scam-modal').classList.remove('show');
+    document.getElementById('nl-email').value = '';
+  }
+</script>
+
+</body>
+</html>

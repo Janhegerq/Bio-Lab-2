@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mitose &amp; Meiose – Bio Lab E2</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green-deep:  #162e1f;
+      --green-dark:  #1f3d2b;
+      --green-mid:   #2b6040;
+      --green-light: #47956a;
+      --green-glow:  #79c498;
+      --green-pale:  #b0d8bc;
+      --accent:      #c8e35a;
+      --white:       #f4fdf7;
+      --muted:       #5a7a65;
+      --nav-h:       74px;
+    }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--green-deep);
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content:'';
+      position:fixed; inset:0;
+      background:
+        radial-gradient(ellipse 70% 55% at 15% 25%, rgba(71,149,106,.2) 0%, transparent 60%),
+        radial-gradient(ellipse 55% 70% at 85% 75%, rgba(43,96,64,.25) 0%, transparent 60%),
+        radial-gradient(ellipse 45% 45% at 50% 50%, rgba(121,196,152,.06) 0%, transparent 70%);
+      pointer-events:none; z-index:0;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position:fixed; top:0; left:0; right:0;
+      height: var(--nav-h);
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 0 2rem;
+      background: rgba(22,46,31,.88);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(121,196,152,.18);
+      z-index:100;
+    }
+    .logo { display:flex; align-items:center; gap:.7rem; text-decoration:none; }
+    .logo-icon {
+      width:44px; height:44px;
+      background: rgba(43,96,64,.6);
+      border: 1.5px solid rgba(121,196,152,.35);
+      border-radius:10px;
+      display:flex; align-items:center; justify-content:center;
+      flex-shrink:0;
+    }
+    .logo-icon svg { width:28px; height:28px; }
+    .logo-text { display:flex; flex-direction:column; line-height:1; }
+    .logo-text .brand {
+      font-family:'Playfair Display',serif;
+      font-size:1.2rem; font-weight:900;
+      color:var(--white); letter-spacing:.02em;
+    }
+    .logo-text .sub {
+      font-size:.62rem; font-weight:500;
+      color:var(--green-pale); letter-spacing:.14em;
+      text-transform:uppercase; margin-top:3px;
+    }
+    .nav-divider {
+      width:1px; height:28px;
+      background:rgba(121,196,152,.2);
+      margin:0 1rem; flex-shrink:0;
+    }
+    .nav-links { display:flex; align-items:center; gap:.1rem; list-style:none; }
+    .nav-links li { position:relative; }
+    .nav-links a {
+      display:flex; align-items:center; gap:.55rem;
+      padding:.5rem 1rem;
+      font-size:.82rem; font-weight:500;
+      color:var(--green-pale); text-decoration:none;
+      border-radius:8px; letter-spacing:.04em;
+      text-transform:uppercase;
+      transition: all .22s ease;
+      white-space:nowrap;
+    }
+    .nav-links a .nav-img {
+      width:24px; height:24px; border-radius:5px;
+      object-fit:cover; opacity:.75; flex-shrink:0;
+      transition: opacity .2s, transform .2s;
+    }
+    .nav-links a:hover .nav-img { opacity:1; transform:scale(1.08); }
+    .nav-links a::after {
+      content:'';
+      position:absolute; bottom:4px; left:50%;
+      transform:translateX(-50%) scaleX(0);
+      width:50%; height:2px;
+      background:var(--accent); border-radius:2px;
+      transition:transform .25s ease;
+    }
+    .nav-links a:hover { color:var(--white); background:rgba(121,196,152,.1); }
+    .nav-links a:hover::after,
+    .nav-links a.active::after { transform:translateX(-50%) scaleX(1); }
+    .nav-links a.active { color:var(--accent); background:rgba(200,227,90,.08); }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      position:relative; z-index:1;
+      padding: calc(var(--nav-h) + 3.5rem) 2rem 3rem;
+      text-align:center;
+    }
+    .page-header .eyebrow {
+      font-size:.75rem; font-weight:600;
+      letter-spacing:.16em; text-transform:uppercase;
+      color:var(--green-glow); margin-bottom:.9rem;
+    }
+    .page-header h1 {
+      font-family:'Playfair Display',serif;
+      font-size:clamp(2.2rem,6vw,4rem);
+      font-weight:900; line-height:1.08;
+      letter-spacing:-.02em;
+    }
+    .page-header h1 em { font-style:italic; color:var(--green-glow); }
+    .page-header p {
+      max-width:560px; margin:1.2rem auto 0;
+      font-size:1rem; line-height:1.75;
+      color:var(--green-pale); font-weight:300;
+    }
+
+    /* ── TOPIC CHOOSER ── */
+    .chooser {
+      position:relative; z-index:1;
+      max-width:900px; margin:0 auto;
+      padding:0 2rem 3rem;
+      display:grid; grid-template-columns:1fr 1fr; gap:1.4rem;
+    }
+
+    .topic-card {
+      cursor:pointer;
+      background:rgba(255,255,255,.05);
+      border:2px solid rgba(121,196,152,.18);
+      border-radius:18px; padding:2rem 2rem 1.8rem;
+      transition: all .3s ease;
+      user-select:none;
+    }
+    .topic-card:hover {
+      border-color:rgba(121,196,152,.4);
+      background:rgba(255,255,255,.08);
+      transform:translateY(-4px);
+    }
+    .topic-card.selected {
+      border-color:var(--accent);
+      background:rgba(200,227,90,.07);
+      box-shadow:0 0 0 1px rgba(200,227,90,.25), 0 16px 40px rgba(0,0,0,.28);
+    }
+    .topic-card .tc-tag {
+      display:inline-block;
+      padding:.22rem .65rem;
+      background:rgba(121,196,152,.12);
+      border:1px solid rgba(121,196,152,.25);
+      border-radius:100px;
+      font-size:.68rem; font-weight:600;
+      letter-spacing:.1em; text-transform:uppercase;
+      color:var(--green-glow); margin-bottom:.9rem;
+    }
+    .topic-card.selected .tc-tag {
+      background:rgba(200,227,90,.12);
+      border-color:rgba(200,227,90,.35);
+      color:var(--accent);
+    }
+    .topic-card h2 {
+      font-family:'Playfair Display',serif;
+      font-size:1.55rem; font-weight:700;
+      margin-bottom:.7rem;
+    }
+    .topic-card p {
+      font-size:.88rem; line-height:1.7;
+      color:var(--green-pale); font-weight:300;
+    }
+    .tc-indicator {
+      display:flex; align-items:center; gap:.5rem;
+      margin-top:1.2rem;
+      font-size:.75rem; font-weight:600;
+      letter-spacing:.08em; text-transform:uppercase;
+      color:var(--muted);
+      transition:color .2s;
+    }
+    .topic-card.selected .tc-indicator { color:var(--accent); }
+    .tc-dot {
+      width:8px; height:8px; border-radius:50%;
+      background:var(--muted); flex-shrink:0;
+      transition:background .2s;
+    }
+    .topic-card.selected .tc-dot { background:var(--accent); }
+
+    /* ── PHASES SECTION ── */
+    .phases-section {
+      position:relative; z-index:1;
+      max-width:980px; margin:0 auto;
+      padding:0 2rem 5rem;
+      display:none;
+    }
+    .phases-section.visible { display:block; }
+
+    .phases-header {
+      text-align:center; margin-bottom:2.5rem;
+    }
+    .phases-header h3 {
+      font-family:'Playfair Display',serif;
+      font-size:clamp(1.5rem,3vw,2.2rem);
+      font-weight:700;
+    }
+    .phases-header p {
+      color:var(--green-pale); font-size:.92rem;
+      margin-top:.6rem; font-weight:300;
+    }
+
+    /* Phase progress bar */
+    .phase-progress {
+      display:flex; align-items:center; justify-content:center;
+      gap:.5rem; margin-bottom:2.5rem; flex-wrap:wrap;
+    }
+    .phase-dot {
+      width:10px; height:10px; border-radius:50%;
+      background:rgba(121,196,152,.25);
+      cursor:pointer; transition:all .2s;
+      flex-shrink:0;
+    }
+    .phase-dot.active { background:var(--accent); transform:scale(1.35); }
+    .phase-dot.done { background:var(--green-glow); }
+    .phase-sep {
+      width:24px; height:1px;
+      background:rgba(121,196,152,.2);
+    }
+
+    /* Phase card viewer */
+    .phase-viewer {
+      position:relative;
+      min-height:480px;
+    }
+
+    .phase-card {
+      display:none;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(121,196,152,.18);
+      border-radius:20px; overflow:hidden;
+      animation: cardIn .4s ease both;
+    }
+    .phase-card.active { display:grid; grid-template-columns:1fr 1fr; }
+
+    @keyframes cardIn {
+      from{opacity:0;transform:translateY(16px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+
+    .phase-img-wrap {
+      position:relative; overflow:hidden;
+      min-height:360px;
+      background:rgba(43,96,64,.35);
+    }
+    .phase-img-wrap img {
+      width:100%; height:100%;
+      object-fit:cover; display:block;
+      filter:saturate(.85) brightness(.8);
+    }
+    .phase-img-wrap::after {
+      content:'';
+      position:absolute; inset:0;
+      background:linear-gradient(135deg, transparent 50%, rgba(22,46,31,.6));
+    }
+    .phase-img-placeholder {
+      position:absolute; inset:0;
+      display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      gap:.6rem;
+      color:var(--muted); font-size:.8rem;
+      letter-spacing:.08em; text-transform:uppercase;
+    }
+    .phase-img-placeholder svg { opacity:.4; }
+
+    .phase-content {
+      padding:2.2rem 2.2rem 2rem;
+      display:flex; flex-direction:column;
+    }
+    .phase-num {
+      font-size:.68rem; font-weight:600;
+      letter-spacing:.15em; text-transform:uppercase;
+      color:var(--green-glow); margin-bottom:.5rem;
+    }
+    .phase-content h4 {
+      font-family:'Playfair Display',serif;
+      font-size:1.6rem; font-weight:700;
+      margin-bottom:1rem; line-height:1.2;
+    }
+    .phase-content .phase-text {
+      font-size:.9rem; line-height:1.78;
+      color:var(--green-pale); font-weight:300;
+      flex:1;
+      overflow-y:auto;
+      max-height:280px;
+      padding-right:.4rem;
+    }
+    .phase-content .phase-text::-webkit-scrollbar { width:4px; }
+    .phase-content .phase-text::-webkit-scrollbar-track { background:transparent; }
+    .phase-content .phase-text::-webkit-scrollbar-thumb { background:rgba(121,196,152,.3); border-radius:2px; }
+
+    /* Nav buttons */
+    .phase-nav {
+      display:flex; align-items:center; justify-content:space-between;
+      margin-top:2rem; padding-top:1.4rem;
+      border-top:1px solid rgba(121,196,152,.12);
+    }
+    .phase-btn {
+      display:flex; align-items:center; gap:.5rem;
+      padding:.55rem 1.2rem;
+      background:rgba(121,196,152,.1);
+      border:1px solid rgba(121,196,152,.25);
+      border-radius:8px;
+      font-size:.8rem; font-weight:600;
+      letter-spacing:.06em; text-transform:uppercase;
+      color:var(--green-pale); cursor:pointer;
+      transition:all .2s ease;
+    }
+    .phase-btn:hover {
+      background:rgba(121,196,152,.2);
+      color:var(--white); border-color:rgba(121,196,152,.5);
+    }
+    .phase-btn:disabled {
+      opacity:.3; cursor:not-allowed;
+      pointer-events:none;
+    }
+    .phase-btn.next {
+      background:rgba(200,227,90,.1);
+      border-color:rgba(200,227,90,.3);
+      color:var(--accent);
+    }
+    .phase-btn.next:hover {
+      background:rgba(200,227,90,.2);
+      border-color:var(--accent);
+      color:var(--white);
+    }
+    .phase-counter {
+      font-size:.78rem; color:var(--muted);
+      letter-spacing:.06em;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      position:relative; z-index:1;
+      border-top:1px solid rgba(121,196,152,.12);
+      padding:1.6rem 2.5rem;
+      display:flex; align-items:center; justify-content:space-between;
+      flex-wrap:wrap; gap:1rem;
+    }
+    .footer-credit { font-size:.78rem; color:var(--muted); letter-spacing:.04em; }
+    .footer-team { font-size:.8rem; color:var(--green-pale); font-weight:500; letter-spacing:.04em; }
+    .footer-team strong { color:var(--accent); }
+
+
+    /* ── GLOSSARY TERM LINKS ── */
+    .gterm {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px dashed rgba(200,227,90,.55);
+      font-weight: 500;
+      transition: color .18s, border-color .18s, background .18s;
+      border-radius: 2px;
+      padding: 0 1px;
+    }
+    .gterm:hover {
+      color: var(--green-deep);
+      background: var(--accent);
+      border-bottom-color: transparent;
+    }
+
+    @media(max-width:720px){
+      nav { padding:0 1rem; }
+      .nav-links a { padding:.38rem .55rem; font-size:.76rem; }
+      .nav-links a .nav-img { width:18px; height:18px; }
+      .logo-text .sub { display:none; }
+      .chooser { grid-template-columns:1fr; padding:0 1rem 2rem; }
+      .phase-card.active { grid-template-columns:1fr; }
+      .phase-img-wrap { min-height:220px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav>
+  <a href="index.html" class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="14" cy="14" r="7" fill="#2b6040" stroke="#79c498" stroke-width="1.4"/>
+        <circle cx="14" cy="14" r="3.2" fill="#47956a"/>
+        <line x1="14" y1="2" x2="14" y2="7" stroke="#c8e35a" stroke-width="1.6" stroke-linecap="round"/>
+        <circle cx="14" cy="1.5" r="1.5" fill="#c8e35a"/>
+        <line x1="14" y1="21" x2="14" y2="26" stroke="#c8e35a" stroke-width="1.6" stroke-linecap="round"/>
+        <circle cx="14" cy="26.5" r="1.5" fill="#c8e35a"/>
+        <line x1="2" y1="14" x2="7" y2="14" stroke="#c8e35a" stroke-width="1.6" stroke-linecap="round"/>
+        <circle cx="1.5" cy="14" r="1.5" fill="#c8e35a"/>
+        <line x1="21" y1="14" x2="26" y2="14" stroke="#c8e35a" stroke-width="1.6" stroke-linecap="round"/>
+        <circle cx="26.5" cy="14" r="1.5" fill="#c8e35a"/>
+        <line x1="5.5" y1="5.5" x2="9" y2="9" stroke="#79c498" stroke-width="1.3" stroke-linecap="round"/>
+        <circle cx="4.8" cy="4.8" r="1.2" fill="#79c498"/>
+        <line x1="22.5" y1="5.5" x2="19" y2="9" stroke="#79c498" stroke-width="1.3" stroke-linecap="round"/>
+        <circle cx="23.2" cy="4.8" r="1.2" fill="#79c498"/>
+        <line x1="5.5" y1="22.5" x2="9" y2="19" stroke="#79c498" stroke-width="1.3" stroke-linecap="round"/>
+        <circle cx="4.8" cy="23.2" r="1.2" fill="#79c498"/>
+        <line x1="22.5" y1="22.5" x2="19" y2="19" stroke="#79c498" stroke-width="1.3" stroke-linecap="round"/>
+        <circle cx="23.2" cy="23.2" r="1.2" fill="#79c498"/>
+      </svg>
+    </div>
+    <div class="logo-text">
+      <span class="brand">Bio</span>
+      <span class="sub">Lab E2 &nbsp;·&nbsp; Lernportal</span>
+    </div>
+  </a>
+
+  <div class="nav-divider"></div>
+
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li>
+      <a href="mitose-meiose.html" class="active">
+        <img class="nav-img" src="" alt="" onerror="this.style.display='none'">
+        Mitose &amp; Meiose
+      </a>
+    </li>
+    <li>
+      <a href="embryonale-entwicklung.html">
+        <img class="nav-img" src="" alt="" onerror="this.style.display='none'">
+        Embryonale Entwicklung
+      </a>
+    </li>
+    <li>
+      <a href="geschlecht.html">
+        <img class="nav-img" src="" alt="" onerror="this.style.display='none'">
+        Geschlecht
+      </a>
+    </li>
+    <li><a href="impressum.html">Impressum</a></li>
+  </ul>
+</nav>
+
+<!-- ── PAGE HEADER ── -->
+<div class="page-header">
+  <p class="eyebrow">Zellteilung</p>
+  <h1>Mitose &amp; <em>Meiose</em></h1>
+  <p>Wähle ein Thema, um die einzelnen Phasen der Zellteilung Schritt für Schritt zu erkunden.</p>
+</div>
+
+<!-- ── TOPIC CHOOSER ── -->
+<div class="chooser">
+
+  <div class="topic-card" id="btn-mitose" onclick="selectTopic('mitose')">
+    <span class="tc-tag">Körperzellen</span>
+    <h2>Mitose</h2>
+    <p>
+      Die Mitose ist die gewöhnliche Zellteilung, bei der aus einer Mutterzelle zwei
+      genetisch identische Tochterzellen entstehen. Sie ist die Grundlage für Wachstum,
+      Gewebereparatur und asexuelle Vermehrung. Die Mitose verläuft in klar
+      abgegrenzten Phasen und stellt sicher, dass jede Tochterzelle den kompletten,
+      diploiden Chromosomensatz (beim Menschen 46 Chromosomen) erhält.
+    </p>
+    <div class="tc-indicator">
+      <span class="tc-dot"></span>
+      5 Phasen · Phasen ansehen
+    </div>
+  </div>
+
+  <div class="topic-card" id="btn-meiose" onclick="selectTopic('meiose')">
+    <span class="tc-tag">Keimzellen</span>
+    <h2>Meiose</h2>
+    <p>
+      Die Meiose ist eine besondere Form der Zellteilung, die ausschließlich zur Bildung
+      von Keimzellen (Eizellen und Spermien) dient. Aus einer diploiden Ausgangszelle
+      entstehen vier haploide Tochterzellen mit je halbiertem Chromosomensatz.
+      Durch Rekombination und Crossing-over entsteht dabei enorme genetische Vielfalt –
+      kein Nachkomme gleicht dem anderen.
+    </p>
+    <div class="tc-indicator">
+      <span class="tc-dot"></span>
+      8 Phasen · Phasen ansehen
+    </div>
+  </div>
+
+</div>
+
+<!-- ── MITOSE PHASES ── -->
+<div class="phases-section" id="phases-mitose">
+  <div class="phases-header">
+    <h3>Die Phasen der Mitose</h3>
+    <p>Klicke dich durch alle fünf Phasen der Mitose.</p>
+  </div>
+
+  <div class="phase-progress" id="progress-mitose"></div>
+
+  <div class="phase-viewer" id="viewer-mitose">
+
+    <!-- Phase 1: Interphase -->
+    <div class="phase-card" data-topic="mitose" data-index="0">
+      <div class="phase-img-wrap">
+        <img src="" alt="Interphase" onerror="this.style.display='none'">
+      </div>
+      <div class="phase-content">
+        <div class="phase-num">Phase 1 von 5</div>
+        <h4>Interphase</h4>
+        <div class="phase-text">
+          <p>Die Interphase ist keine eigentliche Phase der Mitose, sondern die Vorbereitung der Zelle auf die Teilung. Sie macht den größten Teil des Zellzyklus aus und gliedert sich in drei Abschnitte:</p>
+          <br>
+          <p><strong>G1-Phase (Gap 1):</strong> Die Zelle wächst und ist stoffwechselaktiv. Proteine und Zellorganellen werden neu gebildet. Die Zelle prüft, ob alle Voraussetzungen für eine Teilung erfüllt sind.</p>
+          <br>
+          <p><strong>S-Phase (Synthesephase):</strong> Die gesamte DNA wird verdoppelt (repliziert). Aus jedem Chromosom entstehen zwei identische Schwesterchromatiden, die über das Centromer miteinander verbunden bleiben. Der DNA-Gehalt der Zelle verdoppelt sich von 2n auf 4n.</p>
+          <br>
+          <p><strong>G2-Phase (Gap 2):</strong> Die Zelle wächst weiter und bereitet sich gezielt auf die Mitose vor. Tubulin-Proteine für die Spindelfasern werden gebildet, und die DNA wird auf Replikationsfehler überprüft. Erst wenn alle Kontrollpunkte passiert sind, beginnt die eigentliche Mitose.</p>
+        </div>
+        <div class="phase-nav">
+          <button class="phase-btn prev" disabled>← Zurück</button>
+          <span class="phase-counter">1 / 5</span>
+          <button class="phase-btn next" onclick="nextPhase('mitose')">Weiter →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 2: Prophase -->
+    <div class="phase-card" data-topic="mitose" data-index="1">
+      <div class="phase-img-wrap">
+        <img src="" alt="Prophase" onerror="this.style.display='none'">
+      </div>
+      <div class="phase-content">
+        <div class="phase-num">Phase 2 von 5</div>
+        <h4>Prophase</h4>
+        <div class="phase-text">
+          <p>Die Prophase ist die erste sichtbare Phase der Mitose. Hier werden die zuvor unsichtbaren Chromosomen unter dem Mikroskop erkennbar.</p>
+          <br>
+          <p><strong>Kondensation der Chromosomen:</strong> Die langen, fadenartig ausgestreckten DNA-Stränge werden durch Aufwicklung immer kompakter. Die Chromosomen verkürzen und verdicken sich – ein Vorgang, der als Kondensation bezeichnet wird. Jedes Chromosom besteht zu diesem Zeitpunkt bereits aus zwei Schwesterchromatiden.</p>
+          <br>
+          <p><strong>Auflösung der Kernhülle:</strong> Die Membran, die den Zellkern umgibt, beginnt sich aufzulösen. Dadurch wird das Erbgut für die Spindelfasern zugänglich.</p>
+          <br>
+          <p><strong>Bildung der Spindel:</strong> Die Zentriolen (bei tierischen Zellen) wandern zu den Zellpolen und beginnen, den Spindelapparat aufzubauen. Die Spindelfasern bestehen aus Mikrotubuli und werden später die Chromosomen auseinanderziehen.</p>
+          <br>
+          <p><strong>Auflösung des Nukleolus:</strong> Der Nukleolus, in dem ribosomale RNA gebildet wird, löst sich am Ende der Prophase auf.</p>
+        </div>
+        <div class="phase-nav">
+          <button class="phase-btn prev" onclick="prevPhase('mitose')">← Zurück</button>
+          <span class="phase-counter">2 / 5</span>
+          <button class="phase-btn next" onclick="nextPhase('mitose')">Weiter →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 3: Metaphase -->
+    <div class="phase-card" data-topic="mitose" data-index="2">
+      <div class="phase-img-wrap">
+        <img src="" alt="Metaphase" onerror="this.style.display='none'">
+      </div>
+      <div class="phase-content">
+        <div class="phase-num">Phase 3 von 5</div>
+        <h4>Metaphase</h4>
+        <div class="phase-text">
+          <p>Die Metaphase ist die Phase, in der sich die Chromosomen in einer charakteristischen Anordnung präsentieren. Sie ist ideal, um Chromosomen zu zählen und zu analysieren – daher werden für Karyogramme meist Zellen in der Metaphase verwendet.</p>
+          <br>
+          <p><strong>Ausrichtung in der Äquatorialebene:</strong> Alle Chromosomen ordnen sich in der Mitte der Zelle, in der sogenannten Metaphasenplatte (Äquatorialplatte) an. Diese gedachte Ebene liegt genau zwischen den beiden Zellpolen.</p>
+          <br>
+          <p><strong>Anheftung der Spindelfasern:</strong> Die Mikrotubuli des Spindelapparats heften sich an die Centromere der Chromosomen an. An jedem Centromer greift je eine Spindelfaser aus dem einen und aus dem anderen Pol an – so wird sichergestellt, dass die Schwesterchromatiden in entgegengesetzte Richtungen gezogen werden können.</p>
+          <br>
+          <p><strong>Kontrollpunkt:</strong> Bevor die Zelle in die nächste Phase übergeht, überprüft ein molekularer Kontrollmechanismus (Spindel-Kontrollpunkt), ob alle Chromosomen korrekt an der Äquatorialplatte befestigt sind. Nur wenn dieser Kontrollpunkt bestanden ist, setzt die Anaphase ein.</p>
+        </div>
+        <div class="phase-nav">
+          <button class="phase-btn prev" onclick="prevPhase('mitose')">← Zurück</button>
+          <span class="phase-counter">3 / 5</span>
+          <button class="phase-btn next" onclick="nextPhase('mitose')">Weiter →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 4: Anaphase -->
+    <div class="phase-card" data-topic="mitose" data-index="3">
+      <div class="phase-img-wrap">
+        <img src="" alt="Anaphase" onerror="this.style.display='none'">
+      </div>
+      <div class="phase-content">
+        <div class="phase-num">Phase 4 von 5</div>
+        <h4>Anaphase</h4>
+        <div class="phase-text">
+          <p>Die Anaphase ist die kürzeste, aber dramatischste Phase der Mitose. In ihr werden die Schwesterchromatiden voneinander getrennt und zu den entgegengesetzten Zellpolen gezogen.</p>
+          <br>
+          <p><strong>Trennung der Centromere:</strong> Das Enzym Separase spaltet das Protein Cohesin, das die Schwesterchromatiden zusammenhält. Damit werden die Chromatiden zu eigenständigen Tochterchromatiden, die nun als vollständige Chromosomen gelten.</p>
+          <br>
+          <p><strong>Wanderung der Chromosomen:</strong> Die Mikrotubuli verkürzen sich, indem Tubulin-Untereinheiten abgebaut werden. Dadurch werden die Chromosomen aktiv zu den Zellpolen hin gezogen. Die Zelle verlängert sich gleichzeitig in ihrer Längsachse.</p>
+          <br>
+          <p><strong>Ergebnis:</strong> An jedem Zellpol sammeln sich jetzt 46 Chromosomen (beim Menschen). Beide Polgruppen sind genetisch identisch mit der ursprünglichen Mutterzelle. Die gleichmäßige Verteilung des Erbguts auf beide Hälften der Zelle ist damit abgeschlossen.</p>
+        </div>
+        <div class="phase-nav">
+          <button class="phase-btn prev" onclick="prevPhase('mitose')">← Zurück</button>
+          <span class="phase-counter">4 / 5</span>
+          <button class="phase-btn next" onclick="nextPhase('mitose')">Weiter →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 5: Telophase & Zytokinese -->
+    <div class="phase-card" data-topic="mitose" data-index="4">
+      <div class="phase-img-wrap">
+        <img src="" alt="Telophase" onerror="this.style.display='none'">
+      </div>
+      <div class="phase-content">
+        <div class="phase-num">Phase 5 von 5</div>
+        <h4>Telophase &amp; Zytokinese</h4>
+        <div class="phase-text">
+          <p>Die Telophase ist das Gegenstück zur Prophase – alle Ereignisse, die dort eingeleitet wurden, werden nun rückgängig gemacht. Gleichzeitig beginnt die Zytokinese, die eigentliche Teilung des Zellkörpers.</p>
+          <br>
+          <p><strong>Dekondensation der Chromosomen:</strong> Die Chromosomen entspiralisieren sich wieder zu langen, feinen Chromatinfäden. Sie werden damit unter dem Lichtmikroskop unsichtbar.</p>
+          <br>
+          <p><strong>Neubildung der Kernhülle:</strong> Um jede der beiden Chromosomengruppen bildet sich eine neue Kernhülle aus Membranvesikeln des endoplasmatischen Retikulums. Zwei neue Zellkerne entstehen, beide mit vollständigem diploiden Chromosomensatz.</p>
+          <br>
+          <p><strong>Zytokinese bei tierischen Zellen:</strong> Ein kontraktiler Ring aus Aktin und Myosin schnürt die Zelle in der Mitte ein. Dieser Einschnürungsring zieht sich zusammen, bis die Zellmembran durchtrennt ist und zwei vollständige Tochterzellen entstehen.</p>
+          <br>
+          <p><strong>Zytokinese bei Pflanzenzellen:</strong> Da Pflanzenzellen eine starre Zellwand besitzen, kann keine Einschnürung erfolgen. Stattdessen bildet sich in der Mitte eine Zellplatte aus Membranvesikeln des Golgi-Apparats, die sich zur neuen Zellwand ausweitet.</p>
+        </div>
+        <div class="phase-nav">
+          <button class="phase-btn prev" onclick="prevPhase('mitose')">← Zurück</button>
+          <span class="phase-counter">5 / 5</span>
+          <button class="phase-btn next" disabled>Ende ✓</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /viewer-mitose -->
+</div><!-- /phases-mitose -->
+
+
+<!-- ── MEIOSE PHASES ── -->
+<div class="phases-section" id="phases-meiose">
+  <div class="phases-header">
+    <h3>Die Phasen der Meiose</h3>
+    <p>Die Meiose besteht aus zwei aufeinanderfolgenden Teilungen – klicke dich durch alle acht Phasen.</p>
+  </div>
+
+  <div class="phase-progress" id="progress-meiose"></div>
+
+  <div class="phase-viewer" id="viewer-meiose">
+
+    <!-- Meiose I – Prophase I -->
+    <div class="phase-card" data-topic="meiose" data-index="0">
+      <div class="phase-img-wrap">
+        <img src="meiose-prophase1.jpeg" alt="Prophase I" onerror="this.style.display='none'">
+      </div>
+      <div class="phase-content">
+        <div class="phase-num">Phase 1 von 8 · Meiose I</div>
+        <h4>Prophase I</h4>
+        <div class="phase-text">
+          <p>Die Prophase I ist die längste und komplexeste Phase der gesamten Meiose. Sie dauert beim Menschen mehrere Tage und beinhaltet einen entscheidenden Vorgang, der die Meiose grundlegend von der Mitose unterscheidet: das Crossing-over.</p>
+          <br>
+          <p><strong>Kondensation der Chromosomen:</strong> Wie bei der Mitose werden die Chromosomen kompakt und sichtbar. Jedes Chromosom besteht aus zwei Schwesterchromatiden.</p>
+          <br>
+          <p><strong>Synapsis – Paarung homologer Chromosomen:</strong> Homologe Chromosomenpaare (je eines von Mutter und Vater) lagern sich eng nebeneinander. Dieser Vorgang heißt Synapsis, das entstandene Paar Bivalent oder Tetrade (vier Chromatiden).</p>
+          <br>
+          <p><strong>Crossing-over:</strong> Nicht-Schwesterchromatiden homologer Chromosomen überkreuzen sich an sogenannten Chiasmata und tauschen Chromosomenabschnitte aus. Dies führt zu einer Neukombination (Rekombination) des Erbguts – ein entscheidender Motor der genetischen Vielfalt.</p>
+          <br>
+          <p>Am Ende der Prophase I löst sich die Kernhülle auf und der Spindelapparat beginnt sich zu bilden.</p>
+        </div>
+        <div class="phase-nav">
+          <button class="phase-btn prev" disabled>← Zurück</button>
+          <span class="phase-counter">1 / 8</span>
+          <button class="phase-btn next" onclick="nextPhase('meiose')">Weiter →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Meiose I – Metaphase I -->
+    <div class="phase-card" data-topic="meiose" data-index="1">
+      <div class="phase-img-wrap">
+        <img src="meiose-metaphase1.jpeg" alt="Metaphase I" onerror="this.style.display='none'">
+      </div>
+      <div class="phase-content">
+        <div class="phase-num">Phase 2 von 8 · Meiose I</div>
+        <h4>Metaphase I</h4>
+        <div class="phase-text">
+          <p>Die Metaphase I unterscheidet sich grundlegend von der Metaphase der Mitose. Hier ordnen sich nicht einzelne Chromosomen, sondern ganze homologe Chromosomenpaare (Bivalente) in der Äquatorialebene an.</p>
+          <br>
+          <p><strong>Anordnung der Bivalente:</strong> Die Bivalente positionieren sich mit ihren Centromeren auf beiden Seiten der Äquatorialplatte. Die Ausrichtung ist dabei zufällig – welches homologe Chromosom zur welchen Seite zeigt, wird per Zufall entschieden.</p>
+          <br>
+          <p><strong>Zufällige Verteilung:</strong> Dieser Zufallsmechanismus wird als unabhängige Segregation bezeichnet. Beim Menschen mit 23 Chromosomenpaaren entstehen dadurch 2²³ = über 8 Millionen mögliche Kombinationen – selbst ohne Crossing-over.</p>
+          <br>
+          <p><strong>Anheftung der Spindelfasern:</strong> Beide Chromatiden eines Chromosoms haften an derselben Spindelfaser. Das ist der Unterschied zur Metaphase der Mitose, wo die Schwesterchromatiden an gegenüberliegende Fasern geheftet sind.</p>
+        </div>
+        <div class="phase-nav">
+          <button class="phase-btn prev" onclick="prevPhase('meiose')">← Zurück</button>
+          <span class="phase-counter">2 / 8</span>
+          <button class="phase-btn next" onclick="nextPhase('meiose')">Weiter →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Meiose I – Anaphase I -->
+    <div class="phase-card" data-topic="meiose" data-index="2">
+      <div class="phase-img-wrap">
+        <img src="meiose-anaphase1.jpeg" alt="Anaphase I" onerror="this.style.display='none'">
+      </div>
+      <div class="phase-content">
+        <div class="phase-num">Phase 3 von 8 · Meiose I</div>
+        <h4>Anaphase I</h4>
+        <div class="phase-text">
+          <p>In der Anaphase I werden die homologen Chromosomen voneinander getrennt und zu den entgegengesetzten Polen gezogen – ein entscheidender Unterschied zur Mitose-Anaphase.</p>
+          <br>
+          <p><strong>Trennung der homologen Chromosomen:</strong> Die Spindelfasern verkürzen sich und ziehen je ein ganzes homologes Chromosom (bestehend aus zwei Schwesterchromatiden) zu jedem Pol. Die Schwesterchromatiden bleiben dabei am Centromer verbunden – sie werden hier noch nicht getrennt.</p>
+          <br>
+          <p><strong>Reduktion des Chromosomensatzes:</strong> Durch diese Trennung wird die Chromosomenzahl halbiert. An jedem Pol befinden sich jetzt nur noch 23 Chromosomen (beim Menschen) – jedes jedoch noch aus zwei Chromatiden bestehend. Der DNA-Gehalt pro Pol beträgt 2n statt 4n.</p>
+          <br>
+          <p><strong>Rekombinierte Chromosomen:</strong> Da in der Prophase I ein Crossing-over stattfand, tragen die Chromosomen, die zu den Polen wandern, bereits Kombinationen aus mütterlichem und väterlichem Erbgut.</p>
+        </div>
+        <div class="phase-nav">
+          <button class="phase-btn prev" onclick="prevPhase('meiose')">← Zurück</button>
+          <span class="phase-counter">3 / 8</span>
+          <button class="phase-btn next" onclick="nextPhase('meiose')">Weiter →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Meiose I – Telophase I -->
+    <div class="phase-card" data-topic="meiose" data-index="3">
+      <div class="phase-img-wrap">
+        <img src="meiose-telophase1.jpeg" alt="Telophase I" onerror="this.style.display='none'">
+      </div>
+      <div class="phase-content">
+        <div class="phase-num">Phase 4 von 8 · Meiose I</div>
+        <h4>Telophase I &amp; Zytokinese I</h4>
+        <div class="phase-text">
+          <p>Die Telophase I beendet die erste meiotische Teilung. Sie verläuft ähnlich wie die Telophase der Mitose, hat aber ein anderes Ergebnis.</p>
+          <br>
+          <p><strong>Dekondensation und Kernhülle:</strong> An beiden Polen bilden sich neue Kernhüllen um die Chromosomengruppen. Die Chromosomen können sich (je nach Organismus) etwas entspiralisieren. Bei vielen Organismen ist diese Phase sehr kurz oder fehlt fast vollständig.</p>
+          <br>
+          <p><strong>Zytokinese I:</strong> Der Zellkörper teilt sich in zwei Tochterzellen. Jede Tochterzelle enthält einen haploiden Chromosomensatz (n = 23 beim Menschen), aber jedes Chromosom besteht noch aus zwei Schwesterchromatiden.</p>
+          <br>
+          <p><strong>Keine DNA-Verdopplung:</strong> Im Gegensatz zum normalen Zellzyklus gibt es zwischen Meiose I und Meiose II keine S-Phase – die DNA wird nicht erneut repliziert. Beide Tochterzellen treten direkt in die Meiose II ein.</p>
+        </div>
+        <div class="phase-nav">
+          <button class="phase-btn prev" onclick="prevPhase('meiose')">← Zurück</button>
+          <span class="phase-counter">4 / 8</span>
+          <button class="phase-btn next" onclick="nextPhase('meiose')">Weiter →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Meiose II – Prophase II -->
+    <div class="phase-card" data-topic="meiose" data-index="4">
+      <div class="phase-img-wrap">
+        <img src="meiose-prophase2.jpeg" alt="Prophase II" onerror="this.style.display='none'">
+      </div>
+      <div class="phase-content">
+        <div class="phase-num">Phase 5 von 8 · Meiose II</div>
+        <h4>Prophase II</h4>
+        <div class="phase-text">
+          <p>Die Meiose II beginnt in beiden Tochterzellen gleichzeitig. Sie ähnelt stark der Prophase einer normalen Mitose, startet aber mit einem haploiden Chromosomensatz.</p>
+          <br>
+          <p><strong>Kondensation:</strong> Die Chromosomen kondensieren erneut und werden wieder unter dem Mikroskop sichtbar. Jedes Chromosom besteht nach wie vor aus zwei Schwesterchromatiden.</p>
+          <br>
+          <p><strong>Auflösung der Kernhülle:</strong> Sofern in der Telophase I eine neue Kernhülle gebildet wurde, löst sie sich nun wieder auf.</p>
+          <br>
+          <p><strong>Spindelapparat:</strong> Ein neuer Spindelapparat wird aufgebaut. Anders als in der Prophase I findet kein Crossing-over und keine Synapsis statt, da keine homologen Chromosomenpaare mehr vorhanden sind – jedes Chromosom ist jetzt einzigartig in der Zelle.</p>
+        </div>
+        <div class="phase-nav">
+          <button class="phase-btn prev" onclick="prevPhase('meiose')">← Zurück</button>
+          <span class="phase-counter">5 / 8</span>
+          <button class="phase-btn next" onclick="nextPhase('meiose')">Weiter →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Meiose II – Metaphase II -->
+    <div class="phase-card" data-topic="meiose" data-index="5">
+      <div class="phase-img-wrap">
+        <img src="meiose-metaphase2.jpeg" alt="Metaphase II" onerror="this.style.display='none'">
+      </div>
+      <div class="phase-content">
+        <div class="phase-num">Phase 6 von 8 · Meiose II</div>
+        <h4>Metaphase II</h4>
+        <div class="phase-text">
+          <p>Die Metaphase II entspricht weitgehend der Metaphase der Mitose – allerdings mit halbierter Chromosomenzahl.</p>
+          <br>
+          <p><strong>Ausrichtung:</strong> Die 23 Chromosomen (beim Menschen) ordnen sich in der Äquatorialebene an. Ihre Centromere liegen auf der Metaphasenplatte.</p>
+          <br>
+          <p><strong>Anheftung der Spindelfasern:</strong> Dieses Mal heften sich die Spindelfasern aus gegenüberliegenden Polen an die beiden Schwesterchromatiden jedes Chromosoms – wie bei der normalen Mitose. Damit ist die Bühne für die Trennung der Schwesterchromatiden bereitet.</p>
+          <br>
+          <p><strong>Rekombinierte Chromosomen:</strong> Die in der Prophase I rekombinierten Chromosomen liegen nun geordnet auf der Metaphasenplatte. Die genetische Einzigartigkeit der entstehenden Keimzellen ist bereits angelegt.</p>
+        </div>
+        <div class="phase-nav">
+          <button class="phase-btn prev" onclick="prevPhase('meiose')">← Zurück</button>
+          <span class="phase-counter">6 / 8</span>
+          <button class="phase-btn next" onclick="nextPhase('meiose')">Weiter →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Meiose II – Anaphase II -->
+    <div class="phase-card" data-topic="meiose" data-index="6">
+      <div class="phase-img-wrap">
+        <img src="meiose-anaphase2.jpeg" alt="Anaphase II" onerror="this.style.display='none'">
+      </div>
+      <div class="phase-content">
+        <div class="phase-num">Phase 7 von 8 · Meiose II</div>
+        <h4>Anaphase II</h4>
+        <div class="phase-text">
+          <p>Die Anaphase II verläuft wie die Anaphase der Mitose: Die Schwesterchromatiden werden getrennt und zu den Polen gezogen.</p>
+          <br>
+          <p><strong>Trennung der Schwesterchromatiden:</strong> Das Protein Cohesin, das die Schwesterchromatiden zusammenhält, wird durch Separase gespalten. Jede Chromatide wird nun als eigenständiges Chromosom betrachtet.</p>
+          <br>
+          <p><strong>Wanderung zu den Polen:</strong> Die Einzelchromosomen wandern durch Verkürzung der Spindelfasern zu den Zellpolen. An jedem Pol sammeln sich nun 23 Einzelchromosomen.</p>
+          <br>
+          <p><strong>Einzigartigkeit:</strong> Da jedes dieser 23 Chromosomen durch Crossing-over eine individuelle Kombination aus mütterlichem und väterlichem Erbgut trägt, sind alle vier entstehenden Keimzellen genetisch verschieden – selbst untereinander.</p>
+        </div>
+        <div class="phase-nav">
+          <button class="phase-btn prev" onclick="prevPhase('meiose')">← Zurück</button>
+          <span class="phase-counter">7 / 8</span>
+          <button class="phase-btn next" onclick="nextPhase('meiose')">Weiter →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Meiose II – Telophase II -->
+    <div class="phase-card" data-topic="meiose" data-index="7">
+      <div class="phase-img-wrap">
+        <img src="meiose-telophase2.jpeg" alt="Telophase II" onerror="this.style.display='none'">
+      </div>
+      <div class="phase-content">
+        <div class="phase-num">Phase 8 von 8 · Meiose II</div>
+        <h4>Telophase II &amp; Zytokinese II</h4>
+        <div class="phase-text">
+          <p>Die Telophase II und die anschließende Zytokinese II beenden die Meiose. Am Ende dieses Prozesses entstehen vier haploide Tochterzellen.</p>
+          <br>
+          <p><strong>Kernhüllen und Dekondensation:</strong> Um jede Chromosomengruppe bildet sich eine neue Kernhülle. Die Chromosomen entspiralisieren sich wieder, der Nukleolus wird neu gebildet.</p>
+          <br>
+          <p><strong>Zytokinese II:</strong> Beide Tochterzellen aus der Meiose I teilen sich nun ebenfalls. Es entstehen insgesamt vier Tochterzellen.</p>
+          <br>
+          <p><strong>Ergebnis der Meiose:</strong> Vier haploide Zellen (n = 23 beim Menschen) mit je einem einfachen Chromosomensatz. Jede der vier Zellen ist genetisch einzigartig – durch Crossing-over in der Prophase I und die zufällige Verteilung der homologen Chromosomen in der Anaphase I.</p>
+          <br>
+          <p><strong>Spermatogenese vs. Oogenese:</strong> Bei der männlichen Keimzellbildung (Spermatogenese) entstehen aus den vier Zellen vier funktionsfähige Spermien. Bei der weiblichen (Oogenese) hingegen entsteht nur eine Eizelle – die übrigen drei Zellen werden als Polkörperchen abgeschnürt und degenerieren.</p>
+        </div>
+        <div class="phase-nav">
+          <button class="phase-btn prev" onclick="prevPhase('meiose')">← Zurück</button>
+          <span class="phase-counter">8 / 8</span>
+          <button class="phase-btn next" disabled>Ende ✓</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /viewer-meiose -->
+</div><!-- /phases-meiose -->
+
+
+<!-- ── FOOTER ── -->
+<footer>
+  <span class="footer-credit">© 2025 Bio · Lernportal &nbsp;·&nbsp; Alle Inhalte dienen dem Bildungszweck</span>
+  <span class="footer-team">Bio Lab E2 &nbsp;·&nbsp; <strong>Max, Marlene &amp; Jan</strong></span>
+</footer>
+
+<script>
+  // State
+  const state = { mitose: 0, meiose: 0 };
+  const counts = { mitose: 5, meiose: 8 };
+
+  // Build progress dots
+  ['mitose','meiose'].forEach(topic => {
+    const bar = document.getElementById('progress-' + topic);
+    const n = counts[topic];
+    for (let i = 0; i < n; i++) {
+      if (i > 0) {
+        const sep = document.createElement('div');
+        sep.className = 'phase-sep';
+        bar.appendChild(sep);
+      }
+      const dot = document.createElement('div');
+      dot.className = 'phase-dot' + (i === 0 ? ' active' : '');
+      dot.dataset.index = i;
+      dot.onclick = () => goToPhase(topic, i);
+      bar.appendChild(dot);
+    }
+  });
+
+  function selectTopic(topic) {
+    // Update chooser cards
+    document.getElementById('btn-mitose').classList.toggle('selected', topic === 'mitose');
+    document.getElementById('btn-meiose').classList.toggle('selected', topic === 'meiose');
+
+    // Show / hide phase sections
+    document.getElementById('phases-mitose').classList.toggle('visible', topic === 'mitose');
+    document.getElementById('phases-meiose').classList.toggle('visible', topic === 'meiose');
+
+    // Scroll to phases
+    document.getElementById('phases-' + topic).scrollIntoView({ behavior:'smooth', block:'start' });
+
+    // Reset to first phase
+    goToPhase(topic, 0);
+  }
+
+  function goToPhase(topic, index) {
+    state[topic] = index;
+    const cards = document.querySelectorAll(`.phase-card[data-topic="${topic}"]`);
+    cards.forEach((c, i) => c.classList.toggle('active', i === index));
+
+    // Update dots
+    const dots = document.querySelectorAll(`#progress-${topic} .phase-dot`);
+    dots.forEach((d, i) => {
+      d.classList.toggle('active', i === index);
+      d.classList.toggle('done', i < index);
+    });
+  }
+
+  function nextPhase(topic) {
+    if (state[topic] < counts[topic] - 1) goToPhase(topic, state[topic] + 1);
+  }
+
+  function prevPhase(topic) {
+    if (state[topic] > 0) goToPhase(topic, state[topic] - 1);
+  }
+</script>
+
+</body>
+</html>
